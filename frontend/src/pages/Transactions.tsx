@@ -26,26 +26,26 @@ const Transactions = () => {
   const [typeFilter, setTypeFilter] = useState<"all" | "income" | "expense">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
-    from: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+    from: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), // Last 90 days
     to: new Date(),
   });
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
   const [deleteTransaction, setDeleteTransaction] = useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
+  // Load transactions on mount and when date range changes
   useEffect(() => {
-    if (isAuthenticated) {
+    const userId = localStorage.getItem('user_id');
+    if (isAuthenticated || userId) {
       loadTransactions();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, dateRange.from, dateRange.to]);
 
   const loadTransactions = async () => {
     try {
       setIsLoading(true);
-      const data = await db.transactions.getAll({
-        date_start: dateRange.from?.toISOString().split('T')[0],
-        date_end: dateRange.to?.toISOString().split('T')[0],
-      });
+      // Load ALL transactions first, then filter client-side for better UX
+      const data = await db.transactions.getAll();
       setTransactions(data);
     } catch (error) {
       console.error("Failed to load transactions:", error);
@@ -110,8 +110,9 @@ const Transactions = () => {
     return grouped;
   }, [filteredTransactions]);
 
-  // Today's summary
-  const today = new Date().toISOString().split("T")[0];
+  // Today's summary - use local date, not UTC
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const todayTransactions = transactions.filter((t) => t.transaction_date === today);
   const todayIncome = todayTransactions
     .filter((t) => t.transaction_type === "income")
@@ -152,7 +153,8 @@ const Transactions = () => {
     );
   }
 
-  if (!isAuthenticated) {
+  const userId = localStorage.getItem('user_id');
+  if (!isAuthenticated && !userId) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-4">

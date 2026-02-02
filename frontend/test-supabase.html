@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supabase Connection Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Supabase Connection Test</h1>
+    <div id="output" style="white-space: pre-wrap; font-family: monospace; background: #f0f0f0; padding: 20px;"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        const log = (msg) => { output.innerHTML += msg + '\n'; console.log(msg); };
+
+        const supabaseUrl = 'https://ubjrclaiqqxngfcylbfs.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianJjbGFpcXF4bmdmY3lsYmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5NzMzOTEsImV4cCI6MjA3OTU0OTM5MX0.Kkp7BV0ZSWq0ZR6YVOzwQwX08u3NOCxClvQWknWJlbA';
+
+        async function testConnection() {
+            log('🔍 Testing Supabase connection...');
+            log('URL: ' + supabaseUrl);
+            log('');
+
+            const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+            // Test 1: Check if we can connect
+            log('Test 1: Basic connection...');
+            try {
+                const { data, error } = await supabase.from('users').select('count').limit(1);
+                if (error) {
+                    log('❌ Connection Error: ' + JSON.stringify(error, null, 2));
+                    
+                    if (error.code === '42P01') {
+                        log('\n⚠️ The "users" table does NOT exist!');
+                        log('👉 You need to run the complete_database_setup.sql in Supabase SQL Editor');
+                    }
+                } else {
+                    log('✅ Connection successful!');
+                    log('Data: ' + JSON.stringify(data));
+                }
+            } catch (e) {
+                log('❌ Network Error: ' + e.message);
+                log('\n⚠️ This usually means:');
+                log('   1. No internet connection');
+                log('   2. Supabase project is paused/inactive');
+                log('   3. Wrong URL or API key');
+            }
+
+            // Test 2: List available tables
+            log('\nTest 2: Checking available tables...');
+            try {
+                // Try to query the users table schema
+                const { data, error } = await supabase.rpc('get_tables', {});
+                if (data) {
+                    log('Tables: ' + JSON.stringify(data));
+                }
+            } catch (e) {
+                log('(Could not list tables - this is normal)');
+            }
+
+            // Test 3: Try to insert a test user
+            log('\nTest 3: Testing insert capability...');
+            const testUserId = crypto.randomUUID();
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([{
+                        user_id: testUserId,
+                        phone_number: '9999999999',
+                        full_name: 'Test User',
+                        email: 'test@test.com'
+                    }])
+                    .select()
+                    .single();
+
+                if (error) {
+                    log('❌ Insert Error: ' + error.message);
+                    log('Error Code: ' + error.code);
+                    log('Error Details: ' + JSON.stringify(error, null, 2));
+                    
+                    if (error.code === '42P01') {
+                        log('\n🚨 TABLE NOT FOUND! The "users" table does not exist.');
+                        log('\n📋 FIX: Run the SQL from complete_database_setup.sql in Supabase:');
+                        log('   1. Go to https://supabase.com/dashboard');
+                        log('   2. Select your project');
+                        log('   3. Go to SQL Editor');
+                        log('   4. Paste and run the complete_database_setup.sql content');
+                    }
+                } else {
+                    log('✅ Insert successful!');
+                    log('Created user: ' + JSON.stringify(data));
+                    
+                    // Clean up test user
+                    await supabase.from('users').delete().eq('user_id', testUserId);
+                    log('(Test user cleaned up)');
+                }
+            } catch (e) {
+                log('❌ Error: ' + e.message);
+            }
+
+            log('\n========== TEST COMPLETE ==========');
+        }
+
+        testConnection();
+    </script>
+</body>
+</html>

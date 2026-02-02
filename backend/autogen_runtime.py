@@ -1,10 +1,16 @@
 import os
+import sys
 import json
 import requests
 import asyncio
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
+
+# Fix Windows console encoding for Unicode characters
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 # Load environment variables
 load_dotenv()
@@ -381,8 +387,8 @@ from autogen_core.tools import Tool
 
 
 # Supabase configuration
-SUPABASE_URL = "https://ubjrclaiqqxngfcylbfs.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianJjbGFpcXF4bmdmY3lsYmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5NzMzOTEsImV4cCI6MjA3OTU0OTM5MX0.Kkp7BV0ZSWq0ZR6YVOzwQwX08u3NOCxClvQWknWJlbA"
+SUPABASE_URL = "https://ppkwqebglrkznjsrwccz.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwa3dxZWJnbHJrem5qc3J3Y2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzkyODksImV4cCI6MjA4NTYxNTI4OX0.XTCHiMMQKpRB818UhBP7hE6vknw9RGjX_VEh4A8j6vg"
 
 
 class AzureFoundryClient:

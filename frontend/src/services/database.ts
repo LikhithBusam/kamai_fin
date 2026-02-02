@@ -464,7 +464,9 @@ export const db = {
     },
 
     getTodaySummary: async () => {
-      const today = new Date().toISOString().split('T')[0];
+      // Use local date, not UTC (toISOString uses UTC which causes timezone issues)
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       const transactions = await db.transactions.getAll({
         date_start: today,
         date_end: today,

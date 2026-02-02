@@ -21,6 +21,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
+# Fix Windows console encoding for Unicode characters
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -162,8 +167,8 @@ class AgentOrchestrator:
                     "error": str(e)
                 }
 
-            # Brief pause between agents
-            await asyncio.sleep(2)
+            # Minimal pause between agents (reduced from 2s to 0.5s)
+            await asyncio.sleep(0.5)
 
         results["analysis_completed"] = datetime.now().isoformat()
 
@@ -264,10 +269,10 @@ async def get_agent_logs(user_id: str):
         # Fetch agent logs from database
         import requests
         
-        url = f"https://ubjrclaiqqxngfcylbfs.supabase.co/rest/v1/agent_logs"
+        url = f"https://ppkwqebglrkznjsrwccz.supabase.co/rest/v1/agent_logs"
         headers = {
-            "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianJjbGFpcXF4bmdmY3lsYmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5NzMzOTEsImV4cCI6MjA3OTU0OTM5MX0.Kkp7BV0ZSWq0ZR6YVOzwQwX08u3NOCxClvQWknWJlbA",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVianJjbGFpcXF4bmdmY3lsYmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5NzMzOTEsImV4cCI6MjA3OTU0OTM5MX0.Kkp7BV0ZSWq0ZR6YVOzwQwX08u3NOCxClvQWknWJlbA"
+            "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwa3dxZWJnbHJrem5qc3J3Y2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzkyODksImV4cCI6MjA4NTYxNTI4OX0.XTCHiMMQKpRB818UhBP7hE6vknw9RGjX_VEh4A8j6vg",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwa3dxZWJnbHJrem5qc3J3Y2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzkyODksImV4cCI6MjA4NTYxNTI4OX0.XTCHiMMQKpRB818UhBP7hE6vknw9RGjX_VEh4A8j6vg"
         }
         
         params = {
@@ -310,6 +315,75 @@ async def trigger_analysis_sync(request: AnalysisRequest):
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+class QuickAnalysisRequest(BaseModel):
+    user_id: str
+
+
+@app.post("/api/analyze-quick")
+async def trigger_quick_analysis(request: QuickAnalysisRequest, background_tasks: BackgroundTasks):
+    """
+    Quick analysis - runs only 3 essential agents (budget, risk, cashflow)
+    Completes in ~1-2 minutes instead of 8 minutes
+    """
+    user_id = request.user_id
+
+    if not user_id:
+        raise HTTPException(status_code=400, detail="user_id is required")
+
+    # Check if analysis already in progress
+    if user_id in analysis_status and analysis_status[user_id]["status"] == "in_progress":
+        raise HTTPException(
+            status_code=409,
+            detail=f"Analysis already in progress for user {user_id}"
+        )
+
+    async def run_quick_agents(user_id: str):
+        """Run only 3 essential agents for quick analysis"""
+        print(f"\n{'='*60}")
+        print(f"Starting QUICK analysis for user {user_id}")
+        print(f"{'='*60}\n")
+
+        analysis_status[user_id] = {
+            "status": "in_progress",
+            "agents_completed": 0,
+            "total_agents": 3,
+            "last_updated": datetime.now().isoformat()
+        }
+
+        quick_agents = [
+            ("budget", "Smart Budget"),
+            ("risk", "Financial Health"),
+            ("cashflow", "Cash Flow Monitor"),
+        ]
+
+        for idx, (agent_key, agent_name) in enumerate(quick_agents, 1):
+            print(f"\n[{idx}/3] Running {agent_name} Agent...")
+            try:
+                await orchestrator.agents[agent_key].analyze_user(user_id)
+                analysis_status[user_id]["agents_completed"] = idx
+                analysis_status[user_id]["last_updated"] = datetime.now().isoformat()
+                print(f"+ {agent_name} completed")
+            except Exception as e:
+                print(f"X {agent_name} failed: {str(e)}")
+            await asyncio.sleep(0.3)
+
+        analysis_status[user_id]["status"] = "completed"
+        analysis_status[user_id]["last_updated"] = datetime.now().isoformat()
+        print(f"\n{'='*60}")
+        print(f"Quick analysis complete for user {user_id}")
+        print(f"{'='*60}\n")
+
+    background_tasks.add_task(run_quick_agents, user_id)
+
+    return {
+        "status": "started",
+        "message": f"Quick analysis started for user {user_id}. Only 3 core agents.",
+        "user_id": user_id,
+        "analysis_started": datetime.now().isoformat(),
+        "estimated_completion_minutes": 2
+    }
 
 
 @app.post("/api/match-schemes/{user_id}")

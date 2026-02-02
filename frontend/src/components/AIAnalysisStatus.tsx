@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Brain, Loader2, CheckCircle, AlertCircle, Play, RefreshCw } from "lucide-react";
+import { Brain, Loader2, CheckCircle, AlertCircle, Play, RefreshCw, Zap } from "lucide-react";
 import { useApp } from "@/contexts/AppContext";
 import { apiService } from "@/services/api";
 
@@ -18,20 +18,31 @@ export const AIAnalysisStatus = () => {
   const { user, refreshData } = useApp();
   const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isQuickLoading, setIsQuickLoading] = useState(false);
   const [hasAutoTriggered, setHasAutoTriggered] = useState(false);
 
-  const triggerAnalysis = async () => {
+  const triggerAnalysis = async (quick: boolean = false) => {
     if (!user?.id) return;
 
-    setIsLoading(true);
+    if (quick) {
+      setIsQuickLoading(true);
+    } else {
+      setIsLoading(true);
+    }
+    
     try {
-      await apiService.spareBackend.triggerAnalysis(user.id);
+      if (quick) {
+        await apiService.spareBackend.triggerQuickAnalysis(user.id);
+      } else {
+        await apiService.spareBackend.triggerAnalysis(user.id);
+      }
       // Start checking status after triggering
       checkStatus();
     } catch (error) {
       console.error("Failed to trigger analysis:", error);
     } finally {
       setIsLoading(false);
+      setIsQuickLoading(false);
     }
   };
 
@@ -48,13 +59,13 @@ export const AIAnalysisStatus = () => {
         const now = Date.now();
         const oneHour = 60 * 60 * 1000;
 
-        // If no previous analysis or it's been more than an hour, auto-trigger
+        // If no previous analysis or it's been more than an hour, auto-trigger quick analysis
         if (!lastAnalysis || (now - parseInt(lastAnalysis)) > oneHour) {
           setHasAutoTriggered(true);
           localStorage.setItem(`last_analysis_${user.id}`, String(now));
 
-          console.log("[AI Analysis] Auto-triggering analysis for user with complete profile");
-          triggerAnalysis();
+          console.log("[AI Analysis] Auto-triggering QUICK analysis for user with complete profile");
+          triggerAnalysis(true); // Use quick analysis for auto-trigger
         } else {
           // Just check status if analysis was recent
           checkStatus();
@@ -158,33 +169,56 @@ export const AIAnalysisStatus = () => {
           <Badge variant={getStatusColor()}>
             {getStatusText()}
           </Badge>
-          <button
-            onClick={triggerAnalysis}
-            disabled={isLoading || analysisStatus?.status === "in_progress"}
-            className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-3 h-3 animate-spin" />
-                Starting...
-              </>
-            ) : analysisStatus?.status === "in_progress" ? (
-              <>
-                <Loader2 className="w-3 h-3 animate-spin" />
-                Analyzing...
-              </>
-            ) : analysisStatus?.status === "completed" ? (
-              <>
-                <RefreshCw className="w-3 h-3" />
-                Re-run Analysis
-              </>
-            ) : (
-              <>
-                <Play className="w-3 h-3" />
-                Start Analysis
-              </>
-            )}
-          </button>
+          <div className="flex gap-2">
+            {/* Quick Analysis Button - 3 agents, ~1-2 min */}
+            <button
+              onClick={() => triggerAnalysis(true)}
+              disabled={isLoading || isQuickLoading || analysisStatus?.status === "in_progress"}
+              className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 flex items-center gap-2"
+              title="Quick analysis with 3 core agents (~1-2 min)"
+            >
+              {isQuickLoading ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Quick...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-3 h-3" />
+                  Quick
+                </>
+              )}
+            </button>
+            {/* Full Analysis Button - 10 agents, ~5-8 min */}
+            <button
+              onClick={() => triggerAnalysis(false)}
+              disabled={isLoading || isQuickLoading || analysisStatus?.status === "in_progress"}
+              className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2"
+              title="Full analysis with all 10 agents (~5-8 min)"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Starting...
+                </>
+              ) : analysisStatus?.status === "in_progress" ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Analyzing...
+                </>
+              ) : analysisStatus?.status === "completed" ? (
+                <>
+                  <RefreshCw className="w-3 h-3" />
+                  Full Re-run
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3" />
+                  Full Analysis
+                </>
+              )}
+            </button>
+          </div>
         </div>
         
         {analysisStatus && analysisStatus.status === "in_progress" && (

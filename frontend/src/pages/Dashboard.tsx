@@ -152,9 +152,13 @@ const Dashboard = () => {
       const summary = await db.transactions.getTodaySummary();
       setTodaySummary(summary);
 
+      // Use local date instead of UTC (toISOString uses UTC)
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      
       const transactions = await db.transactions.getAll({
-        date_start: new Date().toISOString().split("T")[0],
-        date_end: new Date().toISOString().split("T")[0],
+        date_start: today,
+        date_end: today,
       });
       setRecentTransactions(transactions.slice(0, 5));
 

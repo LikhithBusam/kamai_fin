@@ -57,7 +57,7 @@ export interface AgentLogsResponse {
 export const spareBackendService = {
   /**
    * Trigger complete financial analysis for a user
-   * All 9 agents will analyze and push results to database
+   * All 10 agents will analyze and push results to database
    */
   triggerAnalysis: async (user_id: string): Promise<AnalysisResponse> => {
     console.log(`[Spare Backend] Triggering analysis for user ${user_id}`);
@@ -77,6 +77,31 @@ export const spareBackendService = {
 
     const data = await response.json();
     console.log(`[Spare Backend] Analysis started:`, data);
+    return data;
+  },
+
+  /**
+   * Trigger QUICK analysis - only 3 core agents (budget, risk, cashflow)
+   * Completes in ~1-2 minutes instead of 8 minutes
+   */
+  triggerQuickAnalysis: async (user_id: string): Promise<AnalysisResponse> => {
+    console.log(`[Spare Backend] Triggering QUICK analysis for user ${user_id}`);
+
+    const response = await fetch(`${SPARE_API_URL}/analyze-quick`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user_id }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || `Quick analysis failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(`[Spare Backend] Quick analysis started:`, data);
     return data;
   },
 
