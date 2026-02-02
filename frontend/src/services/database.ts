@@ -255,6 +255,7 @@ export const db = {
       state?: string;
       date_of_birth?: string;
       preferred_language?: string;
+      income_range?: string;
     }) => {
       try {
         // Validate required fields
@@ -295,6 +296,7 @@ export const db = {
           state: userData.state || '',
           date_of_birth: userData.date_of_birth || null,
           preferred_language: userData.preferred_language || 'en',
+          income_range: userData.income_range || '',
           is_active: true,
           kyc_verified: false,
           onboarding_completed: false,
@@ -531,14 +533,51 @@ export const db = {
     delete: async (id: string): Promise<void> => {
       const userId = localStorage.getItem('user_id');
       if (!userId) throw new Error('Not authenticated');
-      
+
       const { error } = await supabase
         .from('transactions')
         .delete()
         .eq('transaction_id', id)
         .eq('user_id', userId);
-      
+
       if (error) throw error;
+    },
+
+    bulkCreate: async (transactions: Array<{
+      transaction_date: string;
+      transaction_time?: string;
+      amount: number;
+      transaction_type: 'income' | 'expense';
+      category?: string;
+      subcategory?: string;
+      description?: string;
+      payment_method?: string;
+      merchant_name?: string;
+      location?: string;
+      source?: string;
+      account_id?: string;
+      is_recurring?: boolean;
+      recurring_frequency?: string;
+      tags?: string[];
+    }>): Promise<Transaction[]> => {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) throw new Error('Not authenticated');
+
+      const transactionsWithUser = transactions.map(t => ({
+        user_id: userId,
+        ...t,
+        verified: true,
+        input_method: 'pdf_import',
+        confidence_score: 0.85,
+      }));
+
+      const { data: created, error } = await supabase
+        .from('transactions')
+        .insert(transactionsWithUser)
+        .select();
+
+      if (error) throw error;
+      return (created || []) as Transaction[];
     },
   },
 
@@ -908,6 +947,7 @@ export const db = {
       government_level?: string;
       state_applicable?: string;
       is_active?: boolean;
+      occupation?: string;
     }) => {
       let query = supabase
         .from('government_schemes')
@@ -931,7 +971,108 @@ export const db = {
 
       const { data, error } = await query;
       if (error) throw error;
-      return data || [];
+
+      let schemes = data || [];
+
+      // Check if user has AI-matched schemes in user_schemes table
+      const userId = localStorage.getItem('user_id');
+      let aiMatchedSchemeIds: string[] = [];
+
+      if (userId) {
+        try {
+          const { data: userSchemes } = await supabase
+            .from('user_schemes')
+            .select('scheme_id, match_confidence')
+            .eq('user_id', userId)
+            .order('match_confidence', { ascending: false });
+
+          if (userSchemes && userSchemes.length > 0) {
+            aiMatchedSchemeIds = userSchemes.map(us => us.scheme_id);
+            console.log(`Found ${aiMatchedSchemeIds.length} AI-matched schemes for user`);
+          }
+        } catch (err) {
+          console.error('Failed to fetch AI-matched schemes:', err);
+        }
+      }
+
+      // Filter by occupation if provided
+      if (filters?.occupation && schemes.length > 0) {
+        const occupation = filters.occupation.toLowerCase();
+
+        // Define occupation-to-scheme mapping
+        const occupationKeywords: Record<string, string[]> = {
+          'auto driver': ['vehicle', 'driver', 'fuel', 'transport', 'auto', 'rickshaw', 'pension', 'health', 'insurance'],
+          'rickshaw driver': ['vehicle', 'driver', 'fuel', 'transport', 'auto', 'rickshaw', 'pension', 'health', 'insurance'],
+          'delivery partner': ['two-wheeler', 'delivery', 'accident', 'gig', 'worker', 'pension', 'health', 'insurance'],
+          'food delivery': ['two-wheeler', 'delivery', 'accident', 'gig', 'worker', 'pension', 'health', 'insurance'],
+          'swiggy': ['two-wheeler', 'delivery', 'accident', 'gig', 'worker', 'pension', 'health', 'insurance'],
+          'zomato': ['two-wheeler', 'delivery', 'accident', 'gig', 'worker', 'pension', 'health', 'insurance'],
+          'uber driver': ['vehicle', 'driver', 'ride', 'commercial', 'insurance', 'training', 'pension', 'health'],
+          'ola driver': ['vehicle', 'driver', 'ride', 'commercial', 'insurance', 'training', 'pension', 'health'],
+          'rapido': ['two-wheeler', 'driver', 'ride', 'pension', 'health', 'insurance'],
+          'freelancer': ['self-employment', 'startup', 'skill', 'professional', 'pension', 'health', 'insurance'],
+          'consultant': ['self-employment', 'startup', 'skill', 'professional', 'pension', 'health', 'insurance'],
+          'street vendor': ['svanidhi', 'vendor', 'mudra', 'loan', 'micro', 'pension', 'health', 'food'],
+          'small business': ['pmegp', 'mudra', 'loan', 'enterprise', 'pension', 'health', 'insurance'],
+        };
+
+        // Common schemes for all gig workers
+        const commonSchemes = ['pm-sym', 'ayushman', 'pension', 'health', 'jan dhan', 'atal pension', 'pmjjby', 'pmsby'];
+
+        // Get keywords for user's occupation
+        const relevantKeywords = Object.keys(occupationKeywords).find(key =>
+          occupation.includes(key.toLowerCase())
+        );
+
+        const keywords = relevantKeywords
+          ? [...occupationKeywords[relevantKeywords], ...commonSchemes]
+          : commonSchemes;
+
+        // Score and filter schemes
+        const scoredSchemes = schemes.map(scheme => {
+          const schemeName = (scheme.scheme_name || '').toLowerCase();
+          const schemeDesc = (scheme.description || '').toLowerCase();
+          const schemeText = `${schemeName} ${schemeDesc}`;
+
+          // Calculate relevance score
+          let score = 0;
+
+          // PRIORITY 1: AI-matched schemes get highest score (100+)
+          if (aiMatchedSchemeIds.includes(scheme.scheme_id)) {
+            score += 100; // AI match gets huge boost
+          }
+
+          // PRIORITY 2: Keyword matching
+          keywords.forEach(keyword => {
+            if (schemeText.includes(keyword.toLowerCase())) {
+              // Higher score for name match vs description match
+              score += schemeName.includes(keyword.toLowerCase()) ? 10 : 3;
+            }
+          });
+
+          // PRIORITY 3: Common schemes for all workers
+          const isCommonScheme = commonSchemes.some(common => schemeText.includes(common));
+          if (isCommonScheme) {
+            score += 5; // Boost common schemes
+          }
+
+          return { ...scheme, relevanceScore: score, isAIMatched: aiMatchedSchemeIds.includes(scheme.scheme_id) };
+        });
+
+        // Sort by relevance score (highest first) and filter out zero-score schemes
+        schemes = scoredSchemes
+          .filter(s => s.relevanceScore > 0)
+          .sort((a, b) => b.relevanceScore - a.relevanceScore);
+      } else if (aiMatchedSchemeIds.length > 0) {
+        // If no occupation filtering but user has AI matches, still prioritize those
+        schemes = schemes.map(scheme => ({
+          ...scheme,
+          isAIMatched: aiMatchedSchemeIds.includes(scheme.scheme_id),
+          relevanceScore: aiMatchedSchemeIds.includes(scheme.scheme_id) ? 100 : 0
+        })).sort((a, b) => b.relevanceScore - a.relevanceScore);
+      }
+
+      return schemes;
     },
 
     getById: async (schemeId: string) => {

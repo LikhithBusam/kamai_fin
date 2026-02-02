@@ -29,6 +29,8 @@ const Benefits = () => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isApplyOpen, setIsApplyOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"browse" | "my-applications">("browse");
+  const [userOccupation, setUserOccupation] = useState<string>("");
+  const [isRefreshingAI, setIsRefreshingAI] = useState(false);
   const [filters, setFilters] = useState({
     scheme_type: "all",
     government_level: "all",
@@ -63,11 +65,25 @@ const Benefits = () => {
   const loadData = async () => {
     try {
       setIsLoading(true);
+
+      // Fetch user data to get occupation
+      let userOccupationValue = userOccupation;
+      if (!userOccupationValue) {
+        try {
+          const userData = await db.users.getMe();
+          userOccupationValue = userData.occupation || "";
+          setUserOccupation(userOccupationValue);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
+        }
+      }
+
       const [schemesData, applicationsData] = await Promise.all([
         db.governmentSchemes.getAll({
           scheme_type: filters.scheme_type !== "all" ? filters.scheme_type : undefined,
           government_level: filters.government_level !== "all" ? filters.government_level : undefined,
           is_active: true,
+          occupation: userOccupationValue || undefined, // Pass occupation for filtering
         }),
         db.userSchemeApplications.getAll(),
       ]);
@@ -99,10 +115,64 @@ const Benefits = () => {
     setIsDetailOpen(true);
   };
 
-  const handleApply = (scheme: any) => {
-    setSelectedScheme(scheme);
-    setApplyFormData({ application_notes: "", documents_submitted: [] });
-    setIsApplyOpen(true);
+  const handleApply = async (scheme: any) => {
+    // Open official government website
+    if (scheme.official_url) {
+      window.open(scheme.official_url, '_blank');
+    }
+
+    // Save tracking record in database
+    try {
+      await db.userSchemeApplications.create({
+        scheme_id: scheme.scheme_id,
+        application_date: new Date().toISOString().split("T")[0],
+        application_status: "submitted",
+        application_notes: "Applied via official website",
+        documents_submitted: undefined,
+      });
+
+      toast.success("Application tracked! Complete it on the official website.");
+      loadData(); // Reload to show in My Applications
+    } catch (error) {
+      console.error("Failed to track application:", error);
+      // Still allow user to visit website even if tracking fails
+    }
+  };
+
+  const handleRefreshAIRecommendations = async () => {
+    try {
+      setIsRefreshingAI(true);
+      toast.info("Running AI analysis to find best schemes for you...");
+
+      const userData = await db.users.getMe();
+      const userId = userData.user_id;
+
+      // Call backend API to run AI matching
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+      const response = await fetch(`${apiUrl}/match-schemes/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('AI matching failed');
+      }
+
+      const result = await response.json();
+      console.log("AI matching result:", result);
+
+      toast.success("AI recommendations updated! Schemes are now personalized for you.");
+
+      // Reload schemes to show updated results
+      await loadData();
+    } catch (error) {
+      console.error("Failed to refresh AI recommendations:", error);
+      toast.error("Failed to refresh recommendations. Using keyword-based filtering instead.");
+    } finally {
+      setIsRefreshingAI(false);
+    }
   };
 
   const handleSubmitApplication = async () => {
@@ -206,8 +276,70 @@ const Benefits = () => {
 
       <PageIntro
         title="What is this page?"
-        description="Here you can see government schemes and benefits you may qualify for, based on your work type, income, and location."
+        description={
+          userOccupation
+            ? `Here you can see government schemes and benefits tailored for ${userOccupation}s, based on your work type, income, and location. Schemes are ranked by relevance to your profession.`
+            : "Here you can see government schemes and benefits you may qualify for, based on your work type, income, and location."
+        }
       />
+
+      {/* Occupation-based filtering indicator */}
+      {userOccupation && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-[6px] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-[5px] bg-blue-500 flex items-center justify-center">
+                <Award className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-[14px] font-semibold text-blue-900 dark:text-blue-100">
+                  Personalized for Your Profession
+                </h3>
+                <p className="text-[12px] text-blue-700 dark:text-blue-300">
+                  Showing schemes most relevant for <strong>{userOccupation}</strong>. Common schemes for all gig workers are also included.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshAIRecommendations}
+              disabled={isRefreshingAI}
+              className="bg-white dark:bg-gray-800 border-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 shrink-0"
+            >
+              {isRefreshingAI ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  AI Matching...
+                </>
+              ) : (
+                <>
+                  <Award className="w-4 h-4 mr-2" />
+                  AI Recommendations
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Information Disclaimer */}
+      <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-[6px] p-4">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-[5px] bg-emerald-500 flex items-center justify-center flex-shrink-0">
+            <ExternalLink className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-[14px] font-semibold text-emerald-900 dark:text-emerald-100 mb-1">
+              How to Apply
+            </h3>
+            <p className="text-[12px] text-emerald-700 dark:text-emerald-300">
+              Click <strong>"Apply Now"</strong> on any scheme to open the official government portal in a new tab.
+              Complete your application there. We'll save a record in "My Applications" so you can track your progress.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "my-applications")}>
         <TabsList className="mb-6">
@@ -292,12 +424,22 @@ const Benefits = () => {
                   >
                     <div className="bg-background border border-border/40 rounded-[6px] p-5 h-full flex flex-col shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:shadow-[0_2px_4px_0_rgba(0,0,0,0.08)] transition-shadow">
                       <div className="flex items-start justify-between mb-3">
-                        <Badge
-                          variant="outline"
-                          className="text-[11px] font-medium"
-                        >
-                          {scheme.government_level === "central" ? "Central" : "State"}
-                        </Badge>
+                        <div className="flex gap-2 flex-wrap">
+                          <Badge
+                            variant="outline"
+                            className="text-[11px] font-medium"
+                          >
+                            {scheme.government_level === "central" ? "Central" : "State"}
+                          </Badge>
+                          {scheme.isAIMatched && (
+                            <Badge
+                              variant="default"
+                              className="text-[11px] font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0"
+                            >
+                              ✨ AI Recommended
+                            </Badge>
+                          )}
+                        </div>
                         {hasApplied && getStatusIcon(userApplication.application_status)}
                       </div>
 
@@ -336,9 +478,10 @@ const Benefits = () => {
                           <Button
                             size="sm"
                             onClick={() => handleApply(scheme)}
-                            className="flex-1 text-[13px]"
+                            className="flex-1 text-[13px] gap-1"
                           >
-                            Apply
+                            Apply Now
+                            <ExternalLink className="w-3 h-3" />
                           </Button>
                         ) : (
                           <Button
@@ -604,8 +747,9 @@ const Benefits = () => {
                     <Button onClick={() => {
                       setIsDetailOpen(false);
                       handleApply(selectedScheme);
-                    }} className="flex-1">
+                    }} className="flex-1 gap-2">
                       Apply Now
+                      <ExternalLink className="w-4 h-4" />
                     </Button>
                   )}
                 </div>

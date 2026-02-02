@@ -33,6 +33,9 @@ const Auth = () => {
     password: "",
     confirm_password: "",
     preferred_language: "en",
+    occupation: "",
+    income_range: "",
+    city: "",
   });
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -55,7 +58,7 @@ const Auth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!signupData.full_name || !signupData.phone_number || !signupData.password) {
+    if (!signupData.full_name || !signupData.phone_number || !signupData.password || !signupData.occupation || !signupData.income_range || !signupData.city) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -74,8 +77,9 @@ const Auth = () => {
         phone_number: signupData.phone_number,
         email: signupData.email || undefined,
         password: signupData.password,
-        occupation: "",
-        city: "",
+        occupation: signupData.occupation,
+        city: signupData.city,
+        income_range: signupData.income_range,
       });
       toast.success("Account created successfully!");
     } catch (error) {
@@ -255,6 +259,59 @@ const Auth = () => {
                       onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                       disabled={isLoading}
                       autoComplete="email"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-occupation">What type of work do you do? *</Label>
+                    <Select
+                      value={signupData.occupation}
+                      onValueChange={(v) => setSignupData({ ...signupData, occupation: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your work type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="delivery_partner">Delivery Partner (Swiggy, Zomato, etc.)</SelectItem>
+                        <SelectItem value="cab_driver">Cab/Auto Driver (Uber, Ola, Rapido)</SelectItem>
+                        <SelectItem value="freelancer">Freelancer (Writing, Design, Tech)</SelectItem>
+                        <SelectItem value="street_vendor">Street Vendor / Hawker</SelectItem>
+                        <SelectItem value="home_service">Home Service (Plumber, Electrician, etc.)</SelectItem>
+                        <SelectItem value="beauty_wellness">Beauty & Wellness Professional</SelectItem>
+                        <SelectItem value="tutor">Private Tutor / Coach</SelectItem>
+                        <SelectItem value="other">Other Gig Work</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-income">Monthly Income Range *</Label>
+                    <Select
+                      value={signupData.income_range}
+                      onValueChange={(v) => setSignupData({ ...signupData, income_range: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select income range" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="below_10k">Below ₹10,000</SelectItem>
+                        <SelectItem value="10k_20k">₹10,000 - ₹20,000</SelectItem>
+                        <SelectItem value="20k_40k">₹20,000 - ₹40,000</SelectItem>
+                        <SelectItem value="40k_60k">₹40,000 - ₹60,000</SelectItem>
+                        <SelectItem value="above_60k">Above ₹60,000</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-city">City *</Label>
+                    <Input
+                      id="signup-city"
+                      type="text"
+                      placeholder="e.g., Mumbai, Delhi, Bangalore"
+                      value={signupData.city}
+                      onChange={(e) => setSignupData({ ...signupData, city: e.target.value })}
+                      disabled={isLoading}
                     />
                   </div>
 

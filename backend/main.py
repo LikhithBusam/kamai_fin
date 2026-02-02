@@ -27,19 +27,19 @@ load_dotenv()
 # Add agents directory to path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'agents'))
 
-# Import all agents
+# Import core agents (optimized from 12 to 10 for efficiency)
+# Removed: context_agent, recommendation_agent, action_agent (redundant/incomplete)
+# Added: cashflow_agent (critical daily monitoring)
 from pattern_agent import PatternRecognitionAgent
 from budget_agent import BudgetAnalysisAgent
-from context_agent import ContextIntelligenceAgent
 from volatility_agent import VolatilityForecasterAgent
 from knowledge_agent import KnowledgeIntegrationAgent
 from tax_agent import TaxComplianceAgent
-from recommendation_agent import RecommendationAgent
 from risk_agent import RiskAssessmentAgent
-from action_agent import ActionExecutionAgent
 from savings_investment_agent import SavingsInvestmentAgent
 from bill_payment_agent import BillPaymentAgent
 from goals_agent import FinancialGoalsAgent
+from cashflow_agent import CashFlowMonitorAgent
 
 # Initialize FastAPI
 app = FastAPI(
@@ -87,30 +87,31 @@ analysis_status: Dict[str, Dict[str, Any]] = {}
 
 
 class AgentOrchestrator:
-    """Orchestrates all 9 agents for a user"""
+    """Orchestrates 7 core agents for efficient user analysis"""
 
     def __init__(self, mcp_servers: str = ".mcp.json"):
         self.mcp_servers = mcp_servers
+        # Optimized from 12 to 10 agents - removed redundant, added critical ones
+        # Removed: context_agent (incomplete), recommendation_agent (too generic), action_agent (can't execute)
+        # Added: cashflow_agent (critical daily monitoring - user's #1 concern)
         self.agents = {
-            "pattern": PatternRecognitionAgent(mcp_servers),
-            "budget": BudgetAnalysisAgent(mcp_servers),
-            "context": ContextIntelligenceAgent(mcp_servers),
-            "volatility": VolatilityForecasterAgent(mcp_servers),
-            "knowledge": KnowledgeIntegrationAgent(mcp_servers),
-            "tax": TaxComplianceAgent(mcp_servers),
-            "recommendation": RecommendationAgent(mcp_servers),
-            "risk": RiskAssessmentAgent(mcp_servers),
-            "action": ActionExecutionAgent(mcp_servers),
-            "savings": SavingsInvestmentAgent(mcp_servers),
-            "bills": BillPaymentAgent(mcp_servers),
-            "goals": FinancialGoalsAgent(mcp_servers)
+            "pattern": PatternRecognitionAgent(mcp_servers),      # Core: Income patterns + trends
+            "volatility": VolatilityForecasterAgent(mcp_servers), # Forecasting
+            "budget": BudgetAnalysisAgent(mcp_servers),           # Feast/Famine budgets
+            "risk": RiskAssessmentAgent(mcp_servers),             # Financial health
+            "knowledge": KnowledgeIntegrationAgent(mcp_servers),  # Govt schemes
+            "tax": TaxComplianceAgent(mcp_servers),               # Tax compliance
+            "bills": BillPaymentAgent(mcp_servers),               # Bill scheduling
+            "savings": SavingsInvestmentAgent(mcp_servers),       # Savings goals
+            "goals": FinancialGoalsAgent(mcp_servers),            # Financial goals
+            "cashflow": CashFlowMonitorAgent(mcp_servers),        # NEW: Daily cash flow alerts
         }
 
     async def run_all_agents(self, user_id: str) -> Dict[str, Any]:
-        """Run all 9 agents in sequence"""
+        """Run 7 core agents in sequence for efficient analysis"""
 
         print(f"\n{'='*60}")
-        print(f"Starting analysis for user {user_id}")
+        print(f"Starting streamlined analysis for user {user_id}")
         print(f"{'='*60}\n")
 
         results = {
@@ -119,31 +120,30 @@ class AgentOrchestrator:
             "agents": {}
         }
 
-        # Update status
+        # Update status - now 10 agents (optimized from 12)
         analysis_status[user_id] = {
             "status": "in_progress",
             "agents_completed": 0,
-            "total_agents": 12,
+            "total_agents": 10,
             "last_updated": datetime.now().isoformat()
         }
 
+        # Optimized agent sequence - most important first
         agent_names = [
-            ("pattern", "Pattern Recognition"),
-            ("context", "Context Intelligence"),
-            ("volatility", "Volatility Forecaster"),
-            ("budget", "Budget Analysis"),
-            ("knowledge", "Knowledge Integration"),
-            ("tax", "Tax & Compliance"),
-            ("risk", "Risk Assessment"),
-            ("recommendation", "Recommendation Engine"),
-            ("action", "Action Execution"),
-            ("savings", "Savings & Investment"),
-            ("bills", "Bill Payment"),
-            ("goals", "Financial Goals")
+            ("pattern", "Income Analysis"),           # Core foundation
+            ("volatility", "Income Forecasting"),     # Predictions
+            ("budget", "Smart Budget"),               # Feast/Famine
+            ("cashflow", "Cash Flow Monitor"),        # NEW: Daily status check
+            ("risk", "Financial Health"),             # Risk score
+            ("knowledge", "Scheme Matching"),         # Govt benefits
+            ("tax", "Tax Compliance"),                # ITR guidance
+            ("bills", "Bill Scheduler"),              # Payment timing
+            ("savings", "Savings Planner"),           # Goals + investments
+            ("goals", "Goal Tracker"),                # Milestones
         ]
 
         for idx, (agent_key, agent_name) in enumerate(agent_names, 1):
-            print(f"\n[{idx}/12] Running {agent_name} Agent...")
+            print(f"\n[{idx}/10] Running {agent_name} Agent...")
 
             try:
                 result = await self.agents[agent_key].analyze_user(user_id)
@@ -186,10 +186,11 @@ orchestrator = AgentOrchestrator()
 async def root():
     """Health check endpoint"""
     return {
-        "service": "Agente AI - Spare Backend",
+        "service": "Kamai AI - Financial Companion",
         "status": "running",
-        "version": "1.0.0",
-        "agents": 12
+        "version": "2.0.0",
+        "agents": 9,
+        "optimized": True
     }
 
 
@@ -311,26 +312,68 @@ async def trigger_analysis_sync(request: AnalysisRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/api/match-schemes/{user_id}")
+async def match_government_schemes(user_id: str):
+    """
+    Use AI Knowledge Agent to intelligently match government schemes
+    based on user's occupation, income, and profile
+
+    This runs the Knowledge Agent which:
+    1. Reads user occupation and profile
+    2. Intelligently matches schemes using AI
+    3. Saves results to user_schemes table
+    4. Returns matched scheme IDs
+
+    Frontend can call this on-demand for "smart recommendations"
+    """
+
+    if not user_id:
+        raise HTTPException(status_code=400, detail="user_id is required")
+
+    try:
+        print(f"\n[Scheme Matching] Running AI matching for user {user_id}")
+
+        # Run Knowledge Agent to match schemes
+        knowledge_agent = orchestrator.agents["knowledge"]
+        result = await knowledge_agent.analyze_user(user_id)
+
+        print(f"[Scheme Matching] AI matching completed for user {user_id}")
+
+        return {
+            "status": "success",
+            "user_id": user_id,
+            "message": "AI-powered scheme matching completed",
+            "result": result,
+            "timestamp": datetime.now().isoformat()
+        }
+
+    except Exception as e:
+        print(f"[Scheme Matching] Error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to match schemes: {str(e)}"
+        )
+
+
 @app.get("/api/health")
 async def health_check():
-    """Detailed health check"""
+    """Detailed health check - 10 optimized agents"""
     return {
         "status": "healthy",
-        "service": "Agente AI Spare Backend",
+        "service": "Kamai AI Backend (Optimized)",
         "agents": {
-            "pattern": "ready",
-            "budget": "ready",
-            "context": "ready",
-            "volatility": "ready",
-            "knowledge": "ready",
-            "tax": "ready",
-            "recommendation": "ready",
-            "risk": "ready",
-            "action": "ready",
-            "savings": "ready",
-            "bills": "ready",
-            "goals": "ready"
+            "pattern": "ready",       # Income Analysis
+            "volatility": "ready",    # Forecasting
+            "budget": "ready",        # Feast/Famine
+            "cashflow": "ready",      # Daily Cash Flow Monitor
+            "risk": "ready",          # Financial Health
+            "knowledge": "ready",     # Scheme Matching
+            "tax": "ready",           # Tax Compliance
+            "bills": "ready",         # Bill Scheduler
+            "savings": "ready",       # Savings Planner
+            "goals": "ready",         # Goal Tracker
         },
+        "total_agents": 10,
         "database": "mcp_connected",
         "timestamp": datetime.now().isoformat()
     }

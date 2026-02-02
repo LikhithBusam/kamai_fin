@@ -18,10 +18,11 @@ export const AIAnalysisStatus = () => {
   const { user, refreshData } = useApp();
   const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasAutoTriggered, setHasAutoTriggered] = useState(false);
 
   const triggerAnalysis = async () => {
     if (!user?.id) return;
-    
+
     setIsLoading(true);
     try {
       await apiService.spareBackend.triggerAnalysis(user.id);
@@ -33,6 +34,36 @@ export const AIAnalysisStatus = () => {
       setIsLoading(false);
     }
   };
+
+  // Auto-trigger analysis when user profile is complete
+  useEffect(() => {
+    const autoTriggerAnalysis = async () => {
+      // Only auto-trigger once per session
+      if (hasAutoTriggered) return;
+
+      // Check if user has complete profile (occupation is set)
+      if (user?.id && user?.occupation) {
+        // Check if analysis was already run recently (stored in localStorage)
+        const lastAnalysis = localStorage.getItem(`last_analysis_${user.id}`);
+        const now = Date.now();
+        const oneHour = 60 * 60 * 1000;
+
+        // If no previous analysis or it's been more than an hour, auto-trigger
+        if (!lastAnalysis || (now - parseInt(lastAnalysis)) > oneHour) {
+          setHasAutoTriggered(true);
+          localStorage.setItem(`last_analysis_${user.id}`, String(now));
+
+          console.log("[AI Analysis] Auto-triggering analysis for user with complete profile");
+          triggerAnalysis();
+        } else {
+          // Just check status if analysis was recent
+          checkStatus();
+        }
+      }
+    };
+
+    autoTriggerAnalysis();
+  }, [user?.id, user?.occupation, hasAutoTriggered]);
 
   const checkStatus = async () => {
     if (!user?.id) return;
@@ -80,15 +111,20 @@ export const AIAnalysisStatus = () => {
   };
 
   const getStatusText = () => {
-    if (!analysisStatus) return "AI Analysis Ready";
-    
+    if (!analysisStatus) {
+      if (user?.occupation) {
+        return "AI Analysis Starting...";
+      }
+      return "Complete your profile for AI insights";
+    }
+
     switch (analysisStatus.status) {
       case "in_progress":
-        return `AI Analysis in Progress (${analysisStatus.agents_completed}/${analysisStatus.total_agents} agents)`;
+        return `Analyzing your finances (${analysisStatus.agents_completed}/${analysisStatus.total_agents} agents)`;
       case "completed":
         return "AI Analysis Complete";
       case "failed":
-        return "AI Analysis Failed";
+        return "AI Analysis Failed - Click to retry";
       default:
         return "AI Analysis Ready";
     }
@@ -135,7 +171,12 @@ export const AIAnalysisStatus = () => {
             ) : analysisStatus?.status === "in_progress" ? (
               <>
                 <Loader2 className="w-3 h-3 animate-spin" />
-                Running...
+                Analyzing...
+              </>
+            ) : analysisStatus?.status === "completed" ? (
+              <>
+                <RefreshCw className="w-3 h-3" />
+                Re-run Analysis
               </>
             ) : (
               <>

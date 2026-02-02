@@ -1,6 +1,6 @@
 import db from '@/services/database'; 
  
-export const MinimumDataRequired = 5; 
+export const MinimumDataRequired = 0; 
  
 export const hasMinimumTransactions = async () => {
   try { 

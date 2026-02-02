@@ -40,17 +40,67 @@ Your task is to match users with relevant government schemes and benefits.
 5. Update application_status as 'eligible'
 6. Log your actions to agent_logs table
 
-**Key Government Schemes for Gig Workers:**
+**Key Government Schemes for Gig Workers (Occupation-Specific):**
+
+**Auto Drivers / Rickshaw Drivers:**
 - PM-SYM (Pension for unorganized workers)
 - Atal Pension Yojana
-- PM Jan Dhan Yojana (bank accounts)
 - Ayushman Bharat (health insurance)
-- PM SVANidhi (street vendor loans)
+- PM Jan Dhan Yojana (bank accounts)
+- Vehicle loan schemes
+- Fuel subsidy schemes (state-specific)
+- Driver welfare schemes
+- Public Provident Fund (PPF)
+- National Pension Scheme (NPS)
+
+**Delivery Partners (Swiggy/Zomato/Dunzo):**
+- PM-SYM (Pension for unorganized workers)
+- Atal Pension Yojana
+- Ayushman Bharat (health insurance)
+- PM Jan Dhan Yojana
+- Two-wheeler loan schemes
+- Accidental insurance schemes
+- Gig worker welfare funds (state-specific)
+- Skill development programs
+
+**Ride-sharing Drivers (Uber/Ola/Rapido):**
+- PM-SYM (Pension for unorganized workers)
+- Atal Pension Yojana
+- Ayushman Bharat (health insurance)
+- PM Jan Dhan Yojana
+- Vehicle loan schemes
+- Driver training programs
+- Fuel subsidy schemes
+- Commercial vehicle insurance support
+
+**Freelancers / Consultants:**
+- Atal Pension Yojana
+- Ayushman Bharat (health insurance)
+- PM Jan Dhan Yojana
 - PMEGP (self-employment loans)
+- Startup India schemes
+- Skill development programs
+- Professional tax benefits
+- National Pension Scheme (NPS)
+
+**Street Vendors / Small Business:**
+- PM SVANidhi (street vendor loans up to ₹50,000)
+- PMEGP (self-employment loans)
+- Mudra Yojana (micro-enterprise loans)
+- PM Jan Dhan Yojana
+- Food security schemes
+- State vendor welfare schemes
+
+**Common for All Gig Workers:**
+- PM-SYM (Pension for unorganized workers)
+- Ayushman Bharat (₹5 lakh health cover)
+- PM Jan Dhan Yojana (zero-balance account)
+- Atal Pension Yojana
 - State-specific welfare schemes
 - Food security (ration card)
-- Housing schemes
-- Skill development programs
+- Housing schemes (PMAY)
+- Life insurance (PMJJBY - ₹2 lakh for ₹330/year)
+- Accident insurance (PMSBY - ₹2 lakh for ₹12/year)
 
 **Eligibility Criteria Examples:**
 - Income thresholds (₹15,000/month for many schemes)
@@ -86,23 +136,32 @@ Store in user_schemes table with fields:
         print(f"[Knowledge Agent] Starting analysis for user {user_id}")
 
         try:
-            prompt = f"""Match government schemes for user {user_id}.
+            prompt = f"""Match government schemes for user {user_id} based on their occupation and profile.
 
 Steps:
-1. Read user_profiles for user {user_id} to understand eligibility
-2. Read government_schemes table to see available schemes
-3. Match user with eligible schemes based on:
+1. Read users table for user {user_id} to get occupation field
+2. Read user_profiles for user {user_id} to understand eligibility (income, location, etc.)
+3. Read government_schemes table to see available schemes
+4. **CRITICALLY IMPORTANT**: Filter and prioritize schemes based on user's occupation:
+   - For "Auto Driver" or "Rickshaw Driver" → Show vehicle loans, fuel subsidy, driver welfare schemes
+   - For "Delivery Partner" or "Food Delivery" → Show two-wheeler loans, accident insurance, gig worker funds
+   - For "Uber Driver" or "Ola Driver" or "Ride-sharing" → Show vehicle loans, driver training, commercial insurance
+   - For "Freelancer" or "Consultant" → Show PMEGP, Startup India, professional tax benefits
+   - For "Street Vendor" or "Small Business" → Show PM SVANidhi, Mudra loans, vendor welfare
+   - For ALL occupations → Include PM-SYM, Ayushman Bharat, Atal Pension, PM Jan Dhan
+5. Match user with eligible schemes based on:
+   - **Occupation (PRIMARY FILTER)**
    - Income level
-   - Location
-   - Occupation
+   - Location (state-specific schemes)
    - Age and demographics
-4. Create entries in user_schemes table for each match
-5. Include match_confidence and any missing_requirements
-6. Log to agent_logs table
+6. Rank schemes by relevance to occupation
+7. Create entries in user_schemes table for each match
+8. Include match_confidence (higher for occupation-relevant schemes) and any missing_requirements
+9. Log to agent_logs table
 
 User ID: {user_id}
 
-Please execute this analysis and report which schemes you matched."""
+**IMPORTANT**: Prioritize occupation-specific schemes first, then show general schemes. The occupation field should be the PRIMARY matching criterion."""
 
             result = await run_autogen_mcp_task(
                 agent_name="knowledge_agent",
