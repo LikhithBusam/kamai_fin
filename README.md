@@ -1,491 +1,314 @@
 <div align="center">
 
-# KAMAI
+# 🏪 StoreBuddy UAE
 
-### AI-Powered Financial Companion for India's Gig Workers
+### AI-Powered Financial Companion for UAE Retail & Distribution Businesses
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![React](https://img.shields.io/badge/React-18.0+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-5.0+-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
-[![Azure OpenAI](https://img.shields.io/badge/Azure_OpenAI-GPT--4-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4+-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 
 <br/>
 
-**Empowering 15+ million gig workers with intelligent financial management**
+**Empowering UAE small businesses with intelligent financial management**
 
-[Features](#-features) | [Architecture](#-architecture) | [AI Agents](#-ai-agents) | [Installation](#-installation) | [API](#-api-documentation)
-
-<br/>
-
-<img src="https://img.shields.io/badge/Hackathon-S2_Finance-FF6B6B?style=for-the-badge" alt="Hackathon"/>
+[Features](#-features) | [Installation](#-installation) | [Tech Stack](#-tech-stack) | [Screenshots](#-screenshots)
 
 </div>
 
 ---
 
-## Table of Contents
+## 📋 Table of Contents
 
-- [Problem Statement](#-problem-statement)
-- [Our Solution](#-our-solution)
+- [Overview](#-overview)
 - [Features](#-features)
-- [Architecture](#-architecture)
-- [AI Agents](#-ai-agents)
+- [UAE-Specific Tools](#-uae-specific-tools)
 - [Tech Stack](#-tech-stack)
 - [Installation](#-installation)
-- [API Documentation](#-api-documentation)
-- [Database Schema](#-database-schema)
 - [Project Structure](#-project-structure)
+- [Environment Variables](#-environment-variables)
+- [Screenshots](#-screenshots)
 
 ---
 
-## Problem Statement
+## 🎯 Overview
 
-### The Gig Economy Challenge
+**StoreBuddy UAE** is a comprehensive financial management platform designed specifically for UAE's retail and distribution businesses. From small grocery stores (baqalas) to electronics shops and pharmacies, StoreBuddy helps business owners manage their finances, track VAT compliance, and grow their business.
 
-India's gig economy employs over **15 million workers** - delivery partners, cab drivers, freelancers - who face unique financial challenges:
+### Why StoreBuddy?
 
-| Challenge | Impact |
-|-----------|--------|
-| **Irregular Income** | Cannot predict next month's earnings |
-| **No Financial Safety Net** | No employer benefits, insurance, or retirement plans |
-| **Complex Tax Compliance** | Multiple income sources, GST complexities |
-| **Limited Access to Credit** | Traditional banks don't understand gig income |
-| **Financial Illiteracy** | No guidance on savings, investments, or budgeting |
-
-### Why Current Solutions Fail
-
-```
-Traditional Banking Apps    ->  Designed for salaried employees
-Expense Trackers           ->  No intelligence, just logging
-Investment Platforms       ->  Assume stable monthly income
-```
+| Challenge | StoreBuddy Solution |
+|-----------|-------------------|
+| **VAT Compliance** | Automated 5% VAT tracking & FTA-ready reports |
+| **Customer Credit (Udhar)** | Trust score system & collection priority |
+| **Cash Flow Management** | Real-time income/expense tracking |
+| **Business Growth** | UAE SME program matching & funding access |
+| **Financial Health** | 7-dimension business health scoring |
 
 ---
 
-## Our Solution
+## ✨ Features
 
-**Kamai** is a multi-agent AI system that understands the unique financial patterns of gig workers and provides:
+### Core Financial Features
 
-```
-+---------------------------------------------------------------------+
-|                                                                     |
-|   ADAPTIVE              INTELLIGENT           ACTIONABLE            |
-|                                                                     |
-|   Adjusts to income     AI-powered insights   Clear steps           |
-|   volatility            from 12 specialized   to improve            |
-|                         agents                finances              |
-|                                                                     |
-+---------------------------------------------------------------------+
-```
+| Feature | Description |
+|---------|-------------|
+| 📊 **Dashboard** | Real-time business overview with UAE-specific insights |
+| 💰 **Transactions** | Income & expense tracking in AED |
+| 📈 **Budget Management** | Adaptive budgeting for feast/famine periods |
+| 🎯 **Financial Goals** | Set and track savings & investment goals |
+| 💳 **Bill Payments** | Priority-based payment scheduling |
+| 📱 **SMS Import** | Parse bank SMS for automatic transaction logging |
 
----
+### Analytics & Insights
 
-## Features
-
-### Hackathon Requirements (All Completed)
-
-| # | Requirement | Feature | Status |
-|---|-------------|---------|--------|
-| 1 | Income & Expense Tracking | Real-time transaction management with categories | Done |
-| 2 | Budget Optimization | Adaptive Feast/Famine/Normal budgeting system | Done |
-| 3 | Savings & Investment Planning | Personalized recommendations (RD, PPF, SIP, NPS) | Done |
-| 4 | Automated Bill Payment Decisions | Priority-based scheduling aligned with income | Done |
-| 5 | Financial Goal Planning with Explanations | Goals with milestones, reasoning & action steps | Done |
-
-### Additional Features
-
-#### Smart Analytics
-- Income pattern recognition
-- Spending trend analysis
-- Volatility forecasting
-- Risk assessment scoring
-
-#### AI-Powered Insights
-- 12 specialized financial agents
-- Personalized recommendations
-- Natural language explanations
-- Context-aware suggestions
-
-#### Tax Management
-- ITR filing assistance
-- Tax-saving recommendations
-- 80C, 80D deduction tracking
-- Advance tax reminders
-
-#### Government Schemes
-- PM-SVANidhi eligibility
-- E-Shram registration guide
-- State scheme matching
-- Application tracking
+| Feature | Description |
+|---------|-------------|
+| 📊 **Statistics** | Revenue trends, expense analysis, profit margins |
+| 🔮 **Cash Flow Forecasting** | Predict future cash position |
+| ⚠️ **Risk Assessment** | Identify business vulnerabilities |
+| 💡 **AI Recommendations** | Personalized financial advice |
 
 ---
 
-## Architecture
+## 🇦🇪 UAE-Specific Tools
 
-### System Overview
+### 1. VAT Management (`/vat`)
+- **5% VAT** tracking (UAE standard rate)
+- Input/Output VAT calculation
+- Quarterly filing reminders
+- FTA-compliant report generation
+- Tax Registration Number (TRN) management
 
-```
-+=========================================================================+
-|                           KAMAI ARCHITECTURE                            |
-+=========================================================================+
-|                                                                         |
-|  +-------------------------------------------------------------------+  |
-|  |                      FRONTEND (React + Vite)                       |  |
-|  |                        localhost:5173                              |  |
-|  |  +----------+ +----------+ +----------+ +----------+ +----------+  |  |
-|  |  |Dashboard | |  Goals   | | Savings  | |  Budget  | |   Tax    |  |  |
-|  |  +----+-----+ +----+-----+ +----+-----+ +----+-----+ +----+-----+  |  |
-|  |       |            |            |            |            |         |  |
-|  |       +------------+-----+------+------------+------------+         |  |
-|  |                          |                                          |  |
-|  |                   +------+------+                                   |  |
-|  |                   | Supabase SDK|                                   |  |
-|  |                   +------+------+                                   |  |
-|  +--------------------------|------------------------------------------+  |
-|                             |                                             |
-|                             v                                             |
-|  +-------------------------------------------------------------------+   |
-|  |                   DATABASE (Supabase PostgreSQL)                   |   |
-|  |                                                                    |   |
-|  |   users | transactions | budgets | goals | savings | bills | tax   |   |
-|  +-------------------------------------------------------------------+   |
-|                             ^                                             |
-|                             |                                             |
-|  +--------------------------|------------------------------------------+  |
-|  |                     BACKEND (FastAPI)                               |  |
-|  |                       localhost:8000                                |  |
-|  |                          |                                          |  |
-|  |              +-----------+-----------+                              |  |
-|  |              |   AGENT ORCHESTRATOR   |                              |  |
-|  |              +-----------+-----------+                              |  |
-|  |                          |                                          |  |
-|  |    +---------------------+---------------------+                    |  |
-|  |    |                     |                     |                    |  |
-|  |    v                     v                     v                    |  |
-|  | +---------+         +---------+         +---------+                 |  |
-|  | | Agent 1 |   ...   | Agent 6 |   ...   |Agent 12 |                 |  |
-|  | | Pattern |         |   Tax   |         |  Goals  |                 |  |
-|  | +----+----+         +----+----+         +----+----+                 |  |
-|  |      |                   |                   |                      |  |
-|  |      +-------------------+-------------------+                      |  |
-|  |                          |                                          |  |
-|  |                          v                                          |  |
-|  |              +-----------------------+                              |  |
-|  |              |     Azure OpenAI      |                              |  |
-|  |              |       (GPT-4)         |                              |  |
-|  |              +-----------------------+                              |  |
-|  +-------------------------------------------------------------------+  |
-|                                                                         |
-+=========================================================================+
-```
+### 2. Credit Book - Udhar System (`/credit-book`)
+- Customer credit tracking
+- **Trust Score** algorithm (0-100)
+- Collection priority recommendations
+- Payment reminder system
+- WhatsApp integration for reminders
 
-### Data Flow
+### 3. Business Health Score (`/business-health`)
+7-dimension scoring system:
+- 📈 Profitability (30%)
+- 💧 Liquidity (20%)
+- 💳 Credit Health (15%)
+- 💰 Expense Control (10%)
+- 🚀 Growth (10%)
+- ⚖️ Debt Burden (10%)
+- 🛡️ Compliance (5%)
 
-```
-User Action                    System Response
-    |                               |
-    v                               |
-+-----------+    HTTP POST     +----+--------+
-|  Frontend | ---------------> |   Backend   |
-|  (React)  |                  |  (FastAPI)  |
-+-----------+                  +------+------+
-                                      |
-                               Triggers 12 Agents
-                                      |
-                                      v
-                              +---------------+
-                              | Azure OpenAI  |
-                              |   Analysis    |
-                              +-------+-------+
-                                      |
-                               Structured JSON
-                                      |
-                                      v
-                              +---------------+
-                              |   Supabase    |
-                              |   Database    |
-                              +-------+-------+
-                                      |
-                               Real-time Sync
-                                      |
-                                      v
-                              +---------------+
-                              |   Frontend    |
-                              |   Updates     |
-                              +---------------+
-```
+### 4. UAE SME Programs (`/uae-programs`)
+Access to 8+ government & private funding programs:
+- **Dubai SME** - Up to AED 15M funding
+- **Khalifa Fund** - Interest-free loans (Abu Dhabi)
+- **Emirates Development Bank** - Term loans up to AED 50M
+- **Mohammed Bin Rashid Fund** - Soft loans
+- **in5 Dubai** - Innovation incubator
+- **Sharjah Entrepreneurship Center**
+- **RAKCEZ Programs**
+- And more...
+
+### 5. Tax Information (`/tax`)
+- **0% Personal Income Tax** - UAE benefit
+- **5% VAT** compliance
+- **9% Corporate Tax** information (profits > AED 375,000)
+- VAT Calculator
+- Compliance checklist
 
 ---
 
-## AI Agents
-
-Kamai employs **12 specialized AI agents**, each with a focused responsibility:
-
-### Agent Overview
-
-```
-                          +---------------------+
-                          |  AGENT ORCHESTRATOR |
-                          |     (main.py)       |
-                          +----------+----------+
-                                     |
-          +--------------------------+-------------------------+
-          |                          |                         |
-          v                          v                         v
-   +--------------+          +--------------+          +--------------+
-   |   ANALYSIS   |          |   PLANNING   |          |   EXECUTION  |
-   |    AGENTS    |          |    AGENTS    |          |    AGENTS    |
-   +--------------+          +--------------+          +--------------+
-```
-
-### Agent Details
-
-| # | Agent | Responsibility | Output Table |
-|---|-------|----------------|--------------|
-| 1 | **Pattern Recognition** | Analyzes income patterns, identifies trends, detects seasonality | `income_patterns` |
-| 2 | **Context Intelligence** | Understands user's life situation - family, location, occupation | `user_profiles` |
-| 3 | **Volatility Forecaster** | Predicts income fluctuations using historical data | `income_forecasts` |
-| 4 | **Budget Analysis** | Creates adaptive budgets: Feast, Famine, Normal modes | `budgets` |
-| 5 | **Knowledge Integration** | Integrates financial literacy, explains concepts simply | `recommendations` |
-| 6 | **Tax Compliance** | Calculates tax liability, identifies deductions, ITR guidance | `tax_records` |
-| 7 | **Risk Assessment** | Evaluates financial health, identifies vulnerabilities | `risk_assessments` |
-| 8 | **Recommendation Engine** | Generates personalized financial advice | `recommendations` |
-| 9 | **Action Execution** | Converts recommendations into actionable tasks | `executed_actions` |
-| 10 | **Savings & Investment** | Plans emergency funds, recommends RD, PPF, SIP, NPS | `savings_goals`, `investment_recommendations` |
-| 11 | **Bill Payment** | Analyzes bills, prioritizes payments, schedules based on income | `bills` |
-| 12 | **Financial Goals** | Creates goal-based plans with explanations and milestones | `financial_goals` |
-
-### How Agents Work
-
-Each agent follows this workflow:
-
-1. **READ** - Fetches relevant data from Supabase
-2. **ANALYZE** - Processes data using Azure OpenAI (GPT-4)
-3. **OUTPUT** - Generates structured JSON matching database schema
-4. **WRITE** - Saves results back to Supabase
-5. **NOTIFY** - Triggers frontend real-time update
-
----
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
-
 | Technology | Purpose |
 |------------|---------|
-| React 18 | UI Framework |
-| TypeScript | Type Safety |
-| Vite | Build Tool |
-| Tailwind CSS | Styling |
-| shadcn/ui | Component Library |
-| Framer Motion | Animations |
-| React Router | Navigation |
-| Recharts | Data Visualization |
+| **React 18** | UI Framework |
+| **TypeScript** | Type Safety |
+| **Vite** | Build Tool |
+| **Tailwind CSS** | Styling |
+| **Shadcn/UI** | Component Library |
+| **Framer Motion** | Animations |
+| **React Router** | Navigation |
+| **Recharts** | Data Visualization |
 
-### Backend
-
+### Backend & Database
 | Technology | Purpose |
 |------------|---------|
-| Python 3.11+ | Runtime |
-| FastAPI | API Framework |
-| Uvicorn | ASGI Server |
-| AutoGen | Agent Framework |
-| Pydantic | Validation |
+| **Supabase** | PostgreSQL Database |
+| **Supabase Auth** | Authentication |
+| **Row Level Security** | Data Protection |
 
-### AI/ML
-
-| Technology | Purpose |
-|------------|---------|
-| Azure OpenAI GPT-4 | Language Model |
-| AutoGen Framework | Multi-Agent Orchestration |
-| Custom Prompts | Domain-Specific Analysis |
-
-### Database
-
-| Technology | Purpose |
-|------------|---------|
-| Supabase | Backend-as-a-Service |
-| PostgreSQL | Relational Database |
-| Row Level Security | Data Protection |
+### Additional Libraries
+- **date-fns** - Date manipulation
+- **Sonner** - Toast notifications
+- **Lucide React** - Icons
+- **React Hook Form** - Form handling
+- **Zod** - Schema validation
 
 ---
 
-## Installation
+## 🚀 Installation
 
 ### Prerequisites
-
 - Node.js 18+
-- Python 3.11+
-- Supabase Account
-- Azure OpenAI Access
+- npm or yarn
+- Supabase account
 
-### Backend Setup
+### Quick Start
 
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Kamai-main/frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` with your Supabase credentials:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open in browser**
+   ```
+   http://localhost:8080
+   ```
+
+### Build for Production
 ```bash
-cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate (Windows)
-venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment - edit .env with your credentials
-
-# Start server
-python main.py
+npm run build
+npm run preview
 ```
 
-### Frontend Setup
+---
 
-```bash
-cd frontend
+## 📁 Project Structure
 
-# Install dependencies
-npm install
-
-# Configure environment - edit .env with Supabase credentials
-
-# Start development server
-npm run dev
+```
+frontend/
+├── public/                 # Static assets
+├── src/
+│   ├── components/        # Reusable UI components
+│   │   ├── ui/           # Shadcn/UI components
+│   │   ├── Header.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── BottomNav.tsx
+│   │   └── ...
+│   ├── contexts/          # React contexts
+│   │   ├── AppContext.tsx
+│   │   └── LanguageContext.tsx
+│   ├── hooks/             # Custom React hooks
+│   ├── lib/               # Utility functions
+│   │   ├── supabase.ts
+│   │   ├── uaeUtils.ts
+│   │   └── ...
+│   ├── pages/             # Page components
+│   │   ├── Auth.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── VATManagementPage.tsx
+│   │   ├── CreditBookPage.tsx
+│   │   ├── BusinessHealthPage.tsx
+│   │   ├── UAEProgramsPage.tsx
+│   │   ├── Tax.tsx
+│   │   └── ...
+│   ├── services/          # API & database services
+│   │   ├── database.ts
+│   │   ├── uaeApi.ts
+│   │   └── api.ts
+│   ├── types/             # TypeScript types
+│   │   └── uae.ts
+│   ├── App.tsx            # Main app component
+│   └── main.tsx           # Entry point
+├── .env                   # Environment variables
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── vite.config.ts
 ```
 
-### Database Setup
+---
 
-1. Create a Supabase project
-2. Run `fix_users_table.sql` in SQL Editor
-3. Disable RLS for development
+## 🔐 Environment Variables
 
-### Environment Variables
+Create a `.env` file in the `frontend` directory:
 
-**Backend (.env)**
-```
-AZURE_OPENAI_API_KEY=your-azure-key
-AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
-AZURE_OPENAI_DEPLOYMENT=gpt-4
-AZURE_OPENAI_API_VERSION=2025-01-01-preview
-```
-
-**Frontend (.env)**
-```
+```env
+# Supabase Configuration (Required)
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
+
+# Backend API (Optional - for AI features)
 VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
 ---
 
-## API Documentation
+## 📱 Screenshots
 
-### Base URL
-```
-http://localhost:8000
-```
+### Dashboard
+- Real-time business overview
+- UAE Business Tools quick access
+- Recent transactions
+- AI-powered recommendations
 
-### Endpoints
+### VAT Management
+- Input/Output VAT tracking
+- Quarterly filing status
+- FTA-compliant reports
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Health check |
-| GET | `/api/health` | Detailed agent status |
-| POST | `/api/analyze` | Trigger user analysis |
-| GET | `/api/status/{user_id}` | Check analysis progress |
+### Credit Book
+- Customer list with trust scores
+- Outstanding balance tracking
+- Collection priority
 
-### Example Request
-
-```bash
-# Trigger Analysis
-curl -X POST http://localhost:8000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"user_id": "your-uuid-here"}'
-```
-
-### Interactive Docs
-```
-http://localhost:8000/docs
-```
+### Business Health
+- 7-dimension radar chart
+- Health score breakdown
+- Improvement recommendations
 
 ---
 
-## Database Schema
+## 🌐 Supported Languages
 
-### Core Tables
-
-| Table | Purpose |
-|-------|---------|
-| `users` | User accounts and profiles |
-| `transactions` | Income and expense records |
-| `budgets` | Adaptive budget configurations |
-| `savings_goals` | Savings targets and progress |
-| `investment_recommendations` | Investment suggestions |
-| `bills` | Bill tracking and scheduling |
-| `financial_goals` | Goal plans with milestones |
-| `recommendations` | AI-generated advice |
+- 🇬🇧 English
+- 🇦🇪 Arabic (العربية)
+- 🇮🇳 Hindi (हिंदी)
+- 🇵🇰 Urdu (اردو)
 
 ---
 
-## Project Structure
+## 📄 License
 
-```
-kamai/
-|-- backend/
-|   |-- agents/
-|   |   |-- pattern_agent.py
-|   |   |-- context_agent.py
-|   |   |-- volatility_agent.py
-|   |   |-- budget_agent.py
-|   |   |-- knowledge_agent.py
-|   |   |-- tax_agent.py
-|   |   |-- risk_agent.py
-|   |   |-- recommendation_agent.py
-|   |   |-- action_agent.py
-|   |   |-- savings_investment_agent.py
-|   |   |-- bill_payment_agent.py
-|   |   +-- goals_agent.py
-|   |
-|   |-- main.py
-|   |-- autogen_runtime.py
-|   +-- requirements.txt
-|
-|-- frontend/
-|   |-- src/
-|   |   |-- components/
-|   |   |-- pages/
-|   |   |-- services/
-|   |   |   +-- database.ts
-|   |   +-- App.tsx
-|   +-- package.json
-|
-|-- fix_users_table.sql
-|-- DOCUMENTATION.md
-+-- README.md
-```
+This project is proprietary software developed for UAE retail businesses.
 
 ---
 
-## Security
+## 🤝 Support
 
-- **Authentication**: Phone + Password based auth
-- **Database**: Row Level Security (RLS) policies
-- **API Keys**: Stored in environment variables
-- **CORS**: Configured for allowed origins only
-- **Input Validation**: Pydantic models for all requests
-
----
-
-## License
-
-This project is licensed under the MIT License.
+For support or queries, contact the development team.
 
 ---
 
 <div align="center">
 
-**Built with love for India's gig workers**
+**Built with ❤️ for UAE Small Businesses**
+
+🇦🇪 Dubai | Abu Dhabi | Sharjah | Ajman | RAK | Fujairah | UAQ 🇦🇪
 
 </div>

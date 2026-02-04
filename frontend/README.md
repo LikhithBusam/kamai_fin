@@ -1,114 +1,105 @@
-# KAMAI - Financial Intelligence Platform
+# StoreBuddy UAE - Frontend
 
-KAMAI (Lakshmi Raave Maa Intiki) is a comprehensive AI-powered financial management system designed specifically for India's gig economy workforce.
+AI-Powered Financial Companion for UAE Retail & Distribution Businesses
 
-## 🎯 Project Overview
-
-This unified web application combines a professional landing page with a full-featured financial management platform, offering:
-
-- **Professional Landing Experience**: Clean, corporate design showcasing KAMAI's capabilities
-- **AI-Powered Financial Intelligence**: Multi-agent system for personalized financial guidance
-- **Offline-First Architecture**: 100% privacy protection with local-first data processing
-- **Government Scheme Integration**: Access to 200+ opportunities and benefits
-- **Real-time Analytics**: Comprehensive financial tracking and forecasting
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- Node.js 18+ and npm
-- Modern web browser with ES6+ support
+- Node.js 18+
+- npm
 
 ### Installation
 
-1. **Clone and navigate to the project:**
-   ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser:**
-   Navigate to `http://localhost:8080`
-
-### Build for Production
-
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
 npm run build
-npm run preview
 ```
 
-## 🎨 Design System
+The app will be available at `http://localhost:8080`
 
-KAMAI uses a professional, corporate modern design system with:
+## 🔧 Configuration
 
-- **Color Palette**: Deep slate/gray tones for professionalism
-- **Typography**: Inter font family with careful weight selection
-- **Spacing**: Generous whitespace for clarity
-- **Shadows**: Subtle depth without distraction
-- **Animation**: Smooth transitions powered by Framer Motion
+Create a `.env` file:
 
-## 🛠️ Technology Stack
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_API_BASE_URL=http://localhost:8000/api
+```
 
-### Frontend Framework
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **React Router** for navigation
+## 📁 Project Structure
 
-### UI & Design
-- **Tailwind CSS** for styling
-- **shadcn/ui** for consistent component library
-- **Framer Motion** for animations
-- **Lucide React** for icons
+```
+src/
+├── components/     # Reusable UI components
+├── contexts/       # React contexts (App, Language)
+├── hooks/          # Custom hooks
+├── lib/            # Utilities & helpers
+├── pages/          # Page components
+├── services/       # API & database services
+├── types/          # TypeScript definitions
+├── App.tsx         # Main app with routes
+└── main.tsx        # Entry point
+```
 
-### Data Visualization
-- **Mermaid.js** for flowchart diagrams
-- **Recharts** for financial charts and analytics
+## 🇦🇪 Key Features
 
-### State Management
-- **React Context** for app-wide state
-- **TanStack Query** for server state management
+- **VAT Management** - 5% UAE VAT tracking & compliance
+- **Credit Book** - Customer credit (Udhar) with trust scores
+- **Business Health** - 7-dimension health scoring
+- **UAE Programs** - Access to 8+ SME funding programs
+- **Multi-language** - English, Arabic, Hindi, Urdu
 
-### Additional Features
-- **Supabase** for backend services
-- **Next Themes** for dark/light mode
-- **React Hook Form** for form handling
+## 🛠️ Tech Stack
 
-## 📄 License
+- React 18 + TypeScript
+- Vite (build tool)
+- Tailwind CSS + Shadcn/UI
+- Supabase (database & auth)
+- Framer Motion (animations)
+- Recharts (charts)
 
-Copyright (c) 2024 KAMAI Team. All rights reserved.
+## 📜 Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+
+## 🌐 Routes
+
+| Path | Description |
+|------|-------------|
+| `/` | Landing page |
+| `/auth` | Login/Signup |
+| `/dashboard` | Main dashboard |
+| `/transactions` | Transaction history |
+| `/budget` | Budget management |
+| `/goals` | Financial goals |
+| `/savings` | Savings & investments |
+| `/tax` | UAE Tax & VAT info |
+| `/vat` | VAT Management |
+| `/credit-book` | Customer credit tracking |
+| `/business-health` | Business health score |
+| `/uae-programs` | UAE SME programs |
+| `/benefits` | Business benefits |
+| `/profile` | User profile |
+
+## 📱 Responsive Design
+
+- Mobile-first approach
+- Bottom navigation on mobile
+- Sidebar navigation on desktop
+- Fully responsive components
 
 ---
 
-**KAMAI** - Empowering India's gig economy with intelligent financial management.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/4241defb-2066-4831-833b-15286023e7d2) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built for UAE Small Businesses 🇦🇪
