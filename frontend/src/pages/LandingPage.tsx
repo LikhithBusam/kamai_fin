@@ -62,33 +62,6 @@ const LandingPage = () => {
     },
   ];
 
-  const team = [
-    {
-      name: 'Nikhileswara Rao Sulake',
-      role: 'Medical Image Analysis Researcher | Computer Vision & Deep Learning',
-      initials: 'NR',
-      linkedin: 'https://www.linkedin.com/in/nikhileswara-rao-sulake/'
-    },
-    {
-      name: 'Sai Manikanta Eswar Machara',
-      role: 'Computer Vision Researcher | Medical Imaging | Deep Learning',
-      initials: 'SM',
-      linkedin: 'https://www.linkedin.com/in/sai-manikanta-eswar-machara/'
-    },
-    {
-      name: 'Siva Teja Reddy Annapureddy',
-      role: 'Machine Learning Engineer | Generative AI',
-      initials: 'ST',
-      linkedin: 'https://www.linkedin.com/in/siva-teja-reddy-annapureddy/'
-    },
-    {
-      name: 'Likhith Busam',
-      role: 'Agentic AI Specialist | Generative AI',
-      initials: 'LB',
-      linkedin: 'https://www.linkedin.com/in/likhith-busam-7b465a31b/'
-    }
-  ];
-
   const stats = [
     { number: '5M+', label: 'UAE Retail Businesses' },
     { number: '8+', label: 'SME Programs' },
@@ -340,54 +313,6 @@ const LandingPage = () => {
                 </div>
               </Card>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Meet Our Team</h2>
-            <p className="text-lg text-slate-600">
-              Built by AI researchers and ML engineers with deep expertise in financial technology
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, idx) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                  <Avatar className="w-16 h-16 mx-auto mb-4">
-                    <AvatarFallback className="bg-slate-900 text-white text-lg font-semibold">
-                      {member.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h3 className="font-semibold text-slate-900 mb-2">{member.name}</h3>
-                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">{member.role}</p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => window.open(member.linkedin, '_blank')}
-                    className="text-slate-600 hover:text-slate-900"
-                  >
-                    <Linkedin size={16} />
-                  </Button>
-                </Card>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
