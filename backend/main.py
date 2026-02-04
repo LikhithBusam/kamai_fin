@@ -1,11 +1,11 @@
 """
-FastAPI Backend for Spare Backend
-Frontend (Windows) ↔ Backend (WSL) HTTP Connection
+StoreBuddy UAE - FastAPI Backend
+AI-Powered Financial Companion for Retail and Distribution Businesses
 
 This backend:
 1. Receives user_id from frontend login
-2. Triggers all 9 agents for analysis
-3. Agents push results to database via MCP
+2. Triggers UAE-specific agents for analysis
+3. Agents push results to database via Supabase
 4. Returns status to frontend
 5. Frontend fetches results directly from database
 """
@@ -48,8 +48,8 @@ from cashflow_agent import CashFlowMonitorAgent
 
 # Initialize FastAPI
 app = FastAPI(
-    title="Agente AI - Spare Backend",
-    description="Background financial analysis service for gig workers",
+    title="StoreBuddy UAE - AI Financial Companion",
+    description="Financial analysis service for UAE retail and distribution businesses",
     version="1.0.0"
 )
 
@@ -191,11 +191,12 @@ orchestrator = AgentOrchestrator()
 async def root():
     """Health check endpoint"""
     return {
-        "service": "Kamai AI - Financial Companion",
+        "service": "StoreBuddy UAE - AI Financial Companion",
+        "service_arabic": "ستور بادي الإمارات - مرافقك المالي الذكي",
         "status": "running",
-        "version": "2.0.0",
-        "agents": 9,
-        "optimized": True
+        "version": "1.0.0",
+        "agents": 10,
+        "currency": "AED"
     }
 
 
@@ -434,7 +435,7 @@ async def health_check():
     """Detailed health check - 10 optimized agents"""
     return {
         "status": "healthy",
-        "service": "Kamai AI Backend (Optimized)",
+        "service": "StoreBuddy UAE Backend",
         "agents": {
             "pattern": "ready",       # Income Analysis
             "volatility": "ready",    # Forecasting
@@ -457,9 +458,10 @@ if __name__ == "__main__":
     import uvicorn
 
     print("\n" + "="*60)
-    print("Starting Agente AI Spare Backend")
+    print("Starting StoreBuddy UAE Backend")
+    print("ستور بادي الإمارات - الخادم الخلفي")
     print("="*60)
-    print("\nFrontend (Windows) can connect to:")
+    print("\nFrontend can connect to:")
     print("  > http://localhost:8000")
     print("  > http://127.0.0.1:8000")
     print("\nAPI Endpoints:")

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Real-Time Sync Hook
  * Provides instant updates for transactions, recommendations, and alerts
  * Uses Supabase Realtime subscriptions
@@ -40,7 +40,7 @@ export const useRealtimeSync = (options: UseRealtimeSyncOptions = {}) => {
         new Notification(title, {
           body: description,
           icon: '/logo.png',
-          tag: 'kamai-realtime',
+          tag: 'storebuddy-realtime',
         });
       }
     }
@@ -80,7 +80,7 @@ export const useRealtimeSync = (options: UseRealtimeSyncOptions = {}) => {
 
             showNotification(
               `New ${type} Recorded`,
-              `₹${amount} - ${txn.category || 'Transaction'}`
+              `AED ${amount} - ${txn.category || 'Transaction'}`
             );
           }
 

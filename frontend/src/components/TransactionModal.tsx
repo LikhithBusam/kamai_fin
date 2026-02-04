@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,7 @@ const TransactionModal = ({ open, onClose }: TransactionModalProps) => {
       type,
       category,
       amount: parseFloat(amount),
-      time: now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
+      time: now.toLocaleTimeString("en-AE", { hour: "2-digit", minute: "2-digit" }),
       date: now.toISOString().split("T")[0],
     });
 
@@ -79,7 +79,7 @@ const TransactionModal = ({ open, onClose }: TransactionModalProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label>Amount (₹)</Label>
+            <Label>Amount (AED)</Label>
             <Input
               type="number"
               placeholder="0"

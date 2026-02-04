@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Home, BarChart3, Lightbulb, User, Menu, X, Wallet, DollarSign, AlertTriangle, Zap, LogOut } from "lucide-react";
+﻿import { useState } from "react";
+import { Home, BarChart3, Lightbulb, User, Menu, X, Wallet, DollarSign, AlertTriangle, Zap, LogOut, Receipt, Building2, HeartPulse, Award } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import { cn } from "@/lib/utils";
@@ -20,16 +20,24 @@ const BottomNav = () => {
 
   const navItems = [
     { icon: Home, label: "Home", path: "/dashboard" },
-    { icon: BarChart3, label: "Stats", path: "/stats" },
-    { icon: Lightbulb, label: "Tips", path: "/tips" },
+    { icon: BarChart3, label: "Sales", path: "/stats" },
+    { icon: Lightbulb, label: "Insights", path: "/tips" },
     { icon: User, label: "Profile", path: "/profile" },
   ];
 
   const moreItems = [
     { icon: Wallet, label: "Budget", path: "/budget" },
-    { icon: DollarSign, label: "Tax Planning", path: "/tax" },
+    { icon: DollarSign, label: "VAT Filing", path: "/tax" },
     { icon: AlertTriangle, label: "Risk Analysis", path: "/risk" },
     { icon: Zap, label: "Action Plan", path: "/actions" },
+  ];
+
+  // UAE Business Tools
+  const uaeTools = [
+    { icon: Receipt, label: "Credit Book (Udhar)", path: "/credit-book" },
+    { icon: Building2, label: "VAT Management", path: "/vat" },
+    { icon: HeartPulse, label: "Business Health", path: "/business-health" },
+    { icon: Award, label: "SME Programs", path: "/uae-programs" },
   ];
 
   const handleLogout = () => {
@@ -73,6 +81,22 @@ const BottomNav = () => {
               <DropdownMenuLabel>Financial Tools</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {moreItems.map(({ icon: Icon, label, path }) => (
+                <DropdownMenuItem
+                  key={path}
+                  onClick={() => {
+                    navigate(path);
+                    setMoreMenuOpen(false);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Icon className="w-4 h-4 mr-2" />
+                  <span>{label}</span>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>UAE Business Tools</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {uaeTools.map(({ icon: Icon, label, path }) => (
                 <DropdownMenuItem
                   key={path}
                   onClick={() => {

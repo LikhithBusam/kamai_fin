@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+﻿import { useNavigate, useLocation } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   LogOut,
   Menu,
   X,
-  Zap,
+  Store,
   ChevronLeft,
   ChevronRight,
   Award,
@@ -163,15 +163,15 @@ const Sidebar = () => {
         {/* Logo Section */}
         <div className="px-4 py-3.5 border-b border-border/30 relative">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[4px] bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center text-white font-semibold text-[13px] flex-shrink-0">
-              <Zap size={16} />
+            <div className="w-8 h-8 rounded-[4px] bg-gradient-to-br from-emerald-600 to-emerald-500 flex items-center justify-center text-white font-semibold text-[13px] flex-shrink-0">
+              <Store size={16} />
             </div>
             {isOpen && (
               <div className="overflow-hidden">
                 <p className="text-[15px] font-semibold tracking-tight text-foreground whitespace-nowrap">
-                KAMAI
+                StoreBuddy
               </p>
-                <p className="text-[11px] text-muted-foreground whitespace-nowrap">Financial Companion</p>
+                <p className="text-[11px] text-muted-foreground whitespace-nowrap">UAE Retail Finance</p>
             </div>
             )}
           </div>

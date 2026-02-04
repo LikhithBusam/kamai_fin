@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SMS Transaction Parser
  * Parses bank SMS messages to extract transaction data automatically
  * Supports major Indian banks: HDFC, ICICI, SBI, Axis, Kotak, PNB, etc.
@@ -47,7 +47,7 @@ const bankPatterns: Record<string, RegExp[]> = {
 const amountPatterns = [
   /Rs\.?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
   /INR\.?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
-  /₹\s*([0-9,]+(?:\.[0-9]{2})?)/i,
+  /AED \s*([0-9,]+(?:\.[0-9]{2})?)/i,
   /Rupees?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
 ];
 
@@ -75,8 +75,8 @@ const debitPatterns = [
 
 // Balance patterns
 const balancePatterns = [
-  /(?:bal|balance)[:\s]*(?:Rs\.?|INR\.?|₹)?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
-  /(?:avl|available)[:\s]*(?:Rs\.?|INR\.?|₹)?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
+  /(?:bal|balance)[:\s]*(?:Rs\.?|INR\.?|AED )?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
+  /(?:avl|available)[:\s]*(?:Rs\.?|INR\.?|AED )?\s*([0-9,]+(?:\.[0-9]{2})?)/i,
 ];
 
 // Account number patterns

@@ -1,3 +1,6 @@
+// StoreBuddy - AI-Powered Financial Companion for Retail and Distribution Businesses
+// Optimized for UAE retail environments
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,9 +8,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./contexts/AppContext";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Header from "./components/Header";
 import MainLayout from "./layouts/MainLayout";
+
+// Core StoreBuddy Pages
 import LandingPage from "./pages/LandingPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import PhasesPage from "./pages/PhasesPage";
@@ -26,19 +32,25 @@ import Goals from "./pages/Goals";
 import Savings from "./pages/Savings";
 import NotFound from "./pages/NotFound";
 
+// UAE Business Tools (Additional Features)
+import CreditBookPage from "./pages/CreditBookPage";
+import VATManagementPage from "./pages/VATManagementPage";
+import BusinessHealthPage from "./pages/BusinessHealthPage";
+import UAEProgramsPage from "./pages/UAEProgramsPage";
+
 const queryClient = new QueryClient();
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* ===== Public Routes ===== */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/features" element={<FeaturesPage />} />
       <Route path="/phases" element={<PhasesPage />} />
       <Route path="/signup" element={<Auth />} />
       <Route path="/login" element={<Auth />} />
 
-      {/* Protected Routes with Sidebar Layout */}
+      {/* ===== Main Dashboard (Protected) ===== */}
       <Route
         path="/dashboard"
         element={
@@ -159,6 +171,49 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* ===== UAE Business Tools (Protected) ===== */}
+      <Route
+        path="/credit-book"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <CreditBookPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/vat"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <VATManagementPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/business-health"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <BusinessHealthPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/uae-programs"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <UAEProgramsPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
@@ -169,14 +224,15 @@ const App = () => (
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <AppProvider>
-        <SidebarProvider>
-          <TooltipProvider>
-            <Header />
-            <Toaster />
-            <Sonner />
-            <AppRoutes />
-          </TooltipProvider>
-        </SidebarProvider>
+        <LanguageProvider>
+          <SidebarProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+            </TooltipProvider>
+          </SidebarProvider>
+        </LanguageProvider>
       </AppProvider>
     </QueryClientProvider>
   </BrowserRouter>

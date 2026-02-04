@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PRODUCTION-GRADE CSV Parser for Bank Statements
  * Supports manual CSV exports from any bank
  */

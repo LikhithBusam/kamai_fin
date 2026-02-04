@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useApp } from "@/contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 import { Home } from "lucide-react";
@@ -29,10 +29,11 @@ const Profile = () => {
     email: "",
     date_of_birth: "",
     preferred_language: "en",
-    occupation: "",
-    city: "",
-    state: "",
-    pin_code: "",
+    emirate: "",
+    nationality: "",
+    business_name: "",
+    business_type: "",
+    trn: "",
     // Financial Profile
     monthly_income_min: "",
     monthly_income_max: "",
@@ -71,10 +72,11 @@ const Profile = () => {
         email: userData.email || "",
         date_of_birth: userData.date_of_birth || "",
         preferred_language: userData.preferred_language || "en",
-        occupation: userData.occupation || "",
-        city: userData.city || "",
-        state: userData.state || "",
-        pin_code: userData.pin_code || "",
+        emirate: userData.emirate || "",
+        nationality: userData.nationality || "",
+        business_name: userData.business_name || "",
+        business_type: userData.business_type || "",
+        trn: userData.trn || "",
         monthly_income_min: profileData?.monthly_income_min?.toString() || "",
         monthly_income_max: profileData?.monthly_income_max?.toString() || "",
         monthly_expenses_avg: profileData?.monthly_expenses_avg?.toString() || "",
@@ -104,10 +106,11 @@ const Profile = () => {
           email: formData.email || undefined,
           date_of_birth: formData.date_of_birth || undefined,
           preferred_language: formData.preferred_language,
-          occupation: formData.occupation,
-          city: formData.city,
-          state: formData.state,
-          pin_code: formData.pin_code,
+          emirate: formData.emirate,
+          nationality: formData.nationality,
+          business_name: formData.business_name,
+          business_type: formData.business_type,
+          trn: formData.trn,
         }),
         db.users.updateProfile({
           monthly_income_min: formData.monthly_income_min ? parseFloat(formData.monthly_income_min) : undefined,
@@ -161,7 +164,7 @@ const Profile = () => {
 
       <PageIntro
         title="What is this page?"
-        description="This page stores your personal and financial details, like income range, expenses, dependents, and linked bank accounts."
+        description="This page stores your personal and business details, like business info, financial profile, and UAE-specific settings."
       />
 
       {/* Basic Info */}
@@ -210,41 +213,81 @@ const Profile = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
+                <SelectItem value="ar">Arabic</SelectItem>
                 <SelectItem value="hi">Hindi</SelectItem>
-                <SelectItem value="mr">Marathi</SelectItem>
-                <SelectItem value="bn">Bengali</SelectItem>
-                <SelectItem value="ta">Tamil</SelectItem>
+                <SelectItem value="ur">Urdu</SelectItem>
               </SelectContent>
             </Select>
               </div>
           <div className="space-y-2">
-            <Label>Occupation</Label>
+            <Label>Nationality</Label>
             <Input
-              value={formData.occupation}
-              onChange={(e) => setFormData({ ...formData, occupation: e.target.value })}
+              value={formData.nationality}
+              onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
             />
                 </div>
           <div className="space-y-2">
-            <Label>City</Label>
-            <Input
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-            />
+            <Label>Emirate</Label>
+            <Select
+              value={formData.emirate}
+              onValueChange={(v) => setFormData({ ...formData, emirate: v })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Emirate" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="dubai">Dubai</SelectItem>
+                <SelectItem value="abu_dhabi">Abu Dhabi</SelectItem>
+                <SelectItem value="sharjah">Sharjah</SelectItem>
+                <SelectItem value="ajman">Ajman</SelectItem>
+                <SelectItem value="rak">Ras Al Khaimah</SelectItem>
+                <SelectItem value="fujairah">Fujairah</SelectItem>
+                <SelectItem value="uaq">Umm Al Quwain</SelectItem>
+              </SelectContent>
+            </Select>
               </div>
+            </div>
+          </Card>
+
+      {/* Business Info */}
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold mb-4">Business Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>State</Label>
+            <Label>Business Name</Label>
             <Input
-              value={formData.state}
-              onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+              value={formData.business_name}
+              onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
             />
-                </div>
+          </div>
           <div className="space-y-2">
-            <Label>PIN Code</Label>
+            <Label>Business Type</Label>
+            <Select
+              value={formData.business_type}
+              onValueChange={(v) => setFormData({ ...formData, business_type: v })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="grocery">Grocery / Baqala</SelectItem>
+                <SelectItem value="electronics">Electronics</SelectItem>
+                <SelectItem value="pharmacy">Pharmacy</SelectItem>
+                <SelectItem value="cafeteria">Cafeteria / Restaurant</SelectItem>
+                <SelectItem value="textile">Textile / Garments</SelectItem>
+                <SelectItem value="auto_parts">Auto Parts</SelectItem>
+                <SelectItem value="general">General Trading</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>TRN (Tax Registration Number)</Label>
             <Input
-              value={formData.pin_code}
-              onChange={(e) => setFormData({ ...formData, pin_code: e.target.value })}
+              value={formData.trn}
+              onChange={(e) => setFormData({ ...formData, trn: e.target.value })}
+              placeholder="15-digit TRN starting with 100"
             />
-              </div>
+          </div>
             </div>
           </Card>
 

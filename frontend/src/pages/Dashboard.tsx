@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/AppContext";
 import TransactionInputCard from "@/components/TransactionInputCard";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles, Wallet, AlertTriangle, Receipt, Upload, FileText, Check, Lightbulb, BadgeCheck, ArrowRight, MessageSquare } from "lucide-react";
+import { Loader2, Sparkles, Wallet, AlertTriangle, Receipt, Upload, FileText, Check, Lightbulb, BadgeCheck, ArrowRight, MessageSquare, Building2, HeartPulse, Award, CreditCard, TrendingUp, Package, Calculator } from "lucide-react";
 import db from "@/services/database";
 import type { Transaction } from "@/services/database";
 import PageIntro from "@/components/PageIntro";
@@ -14,102 +14,110 @@ import { parseCSV } from "@/lib/csvParser";
 import { useToast } from "@/hooks/use-toast";
 import SMSImportModal from "@/components/SMSImportModal";
 
-// Occupation-based quick tips and schemes
-const occupationInsights: Record<string, { tips: string[]; schemes: { name: string; benefit: string }[] }> = {
-  delivery_partner: {
+// UAE Business Tools - Quick Access Cards
+const uaeBusinessTools = [
+  {
+    icon: CreditCard,
+    title: "Credit Book",
+    subtitle: "Udhar/Hisab",
+    description: "Track customer credit & payments",
+    path: "/credit-book",
+    color: "from-blue-500 to-blue-600",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+  },
+  {
+    icon: Building2,
+    title: "VAT Management",
+    subtitle: "UAE 5% VAT",
+    description: "Track VAT & file returns",
+    path: "/vat",
+    color: "from-green-500 to-green-600",
+    bgColor: "bg-green-50",
+    borderColor: "border-green-200",
+  },
+  {
+    icon: HeartPulse,
+    title: "Business Health",
+    subtitle: "7 Dimensions",
+    description: "Score your business health",
+    path: "/business-health",
+    color: "from-purple-500 to-purple-600",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+  },
+  {
+    icon: Award,
+    title: "SME Programs",
+    subtitle: "UAE Funding",
+    description: "Match with 8+ programs",
+    path: "/uae-programs",
+    color: "from-orange-500 to-orange-600",
+    bgColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+  },
+];
+
+// Business type tips and UAE SME programs
+const businessInsights: Record<string, { tips: string[]; programs: { name: string; benefit: string }[] }> = {
+  grocery: {
     tips: [
-      "Track fuel expenses separately - they're tax deductible",
-      "Peak hours (7-9 PM) typically earn 1.5x more",
-      "Set aside 10% of daily earnings for vehicle maintenance",
+      "Track daily cash register opening/closing for accurate reconciliation",
+      "Peak hours (5-9 PM) typically have 2x more sales",
+      "Manage credit carefully - 30-day maximum is recommended",
     ],
-    schemes: [
-      { name: "PM-SVANidhi", benefit: "Up to ₹50,000 working capital loan at low interest" },
-      { name: "E-Shram Card", benefit: "₹2 lakh accidental insurance free" },
-      { name: "Ayushman Bharat", benefit: "₹5 lakh health insurance for family" },
+    programs: [
+      { name: "Dubai SME", benefit: "Up to AED 500,000 for retail businesses" },
+      { name: "Khalifa Fund", benefit: "Interest-free loans up to AED 2M" },
+      { name: "EDB Financing", benefit: "Working capital at competitive rates" },
     ],
   },
-  cab_driver: {
+  electronics: {
     tips: [
-      "Airport runs during flight arrivals are premium fares",
-      "Keep a logbook for tax deductions on vehicle expenses",
-      "Consider multi-platform (Uber + Ola) for better utilization",
+      "Warranty tracking is essential - use serial numbers",
+      "Friday-Saturday are peak selling days",
+      "Keep 10% margin minimum after VAT",
     ],
-    schemes: [
-      { name: "PM-SYM Pension", benefit: "₹3,000/month pension after 60 years" },
-      { name: "E-Shram Card", benefit: "₹2 lakh accidental insurance free" },
-      { name: "PMJJBY", benefit: "₹2 lakh life insurance at ₹436/year" },
+    programs: [
+      { name: "Dubai SME", benefit: "Tech business support up to AED 500,000" },
+      { name: "in5 Tech", benefit: "Incubation + funding for tech retail" },
+      { name: "Khalifa Fund", benefit: "Equipment financing available" },
     ],
   },
-  freelancer: {
+  pharmacy: {
     tips: [
-      "Invoice clients within 48 hours of project completion",
-      "Set aside 30% of income for quarterly advance tax",
-      "Diversify clients - never rely on one for >40% income",
+      "Track expiry dates - FEFO (First Expiry First Out)",
+      "Insurance claims processing within 30 days",
+      "Maintain controlled substance logs for compliance",
     ],
-    schemes: [
-      { name: "Atal Pension Yojana", benefit: "₹1,000-5,000/month pension after 60" },
-      { name: "Stand-Up India", benefit: "Loans ₹10 lakh to ₹1 crore for entrepreneurs" },
-      { name: "PMEGP", benefit: "35% subsidy on loans up to ₹25 lakh" },
+    programs: [
+      { name: "DHA Support", benefit: "Healthcare business licensing support" },
+      { name: "Khalifa Fund", benefit: "Medical retail financing" },
+      { name: "EDB Healthcare", benefit: "Sector-specific financing" },
     ],
   },
-  street_vendor: {
+  cafeteria: {
     tips: [
-      "Best selling hours are 5-8 PM on weekdays",
-      "Register for GST only if turnover exceeds ₹40 lakh",
-      "Keep daily sales records for loan applications",
+      "Morning (7-9 AM) and lunch (12-2 PM) are peak hours",
+      "Track food cost ratio - aim for 30-35%",
+      "Municipality hygiene compliance is mandatory",
     ],
-    schemes: [
-      { name: "PM-SVANidhi", benefit: "₹10,000-50,000 collateral-free loan" },
-      { name: "PM Jan Dhan Yojana", benefit: "Zero-balance bank account + ₹10,000 OD" },
-      { name: "Ayushman Bharat", benefit: "₹5 lakh health insurance for family" },
+    programs: [
+      { name: "Dubai SME", benefit: "F&B business support programs" },
+      { name: "Khalifa Fund", benefit: "Restaurant financing up to AED 1M" },
+      { name: "MBRF", benefit: "Entrepreneurship training included" },
     ],
   },
-  home_service: {
+  general: {
     tips: [
-      "Weekend bookings typically pay 20% more",
-      "Upsell maintenance contracts for recurring income",
-      "Carry business cards for referral growth",
+      "Diversify suppliers to reduce single-source risk",
+      "Track slow-moving inventory monthly",
+      "Build customer loyalty with credit limits",
     ],
-    schemes: [
-      { name: "PM Vishwakarma", benefit: "₹3 lakh loan + skill training for artisans" },
-      { name: "PMEGP", benefit: "Up to 35% subsidy on business loans" },
-      { name: "E-Shram Card", benefit: "₹2 lakh accidental insurance free" },
-    ],
-  },
-  beauty_wellness: {
-    tips: [
-      "Bridal season (Oct-Feb) can 3x your monthly income",
-      "Offer package deals for repeat customers",
-      "Track product costs separately from service income",
-    ],
-    schemes: [
-      { name: "PM Vishwakarma", benefit: "Training + tools support for beauticians" },
-      { name: "Mudra Loan", benefit: "Up to ₹10 lakh for small business" },
-      { name: "PMJJBY", benefit: "₹2 lakh life insurance at ₹436/year" },
-    ],
-  },
-  tutor: {
-    tips: [
-      "Exam season (Feb-May) is peak earning time",
-      "Group batches increase hourly rate by 2-3x",
-      "Online tutoring expands reach beyond local area",
-    ],
-    schemes: [
-      { name: "Stand-Up India", benefit: "Loans for education sector startups" },
-      { name: "Atal Pension Yojana", benefit: "₹1,000-5,000/month pension after 60" },
-      { name: "PMSBY", benefit: "₹2 lakh accident insurance at ₹20/year" },
-    ],
-  },
-  other: {
-    tips: [
-      "Track all income sources for accurate tax filing",
-      "Build an emergency fund of 3 months' expenses",
-      "Separate business and personal expenses",
-    ],
-    schemes: [
-      { name: "E-Shram Card", benefit: "₹2 lakh accidental insurance free" },
-      { name: "PM Jan Dhan Yojana", benefit: "Zero-balance account + benefits" },
-      { name: "Atal Pension Yojana", benefit: "₹1,000-5,000/month pension after 60" },
+    programs: [
+      { name: "Dubai SME", benefit: "General trading support" },
+      { name: "Khalifa Fund", benefit: "Working capital financing" },
+      { name: "EDB Financing", benefit: "Trade credit facilities" },
     ],
   },
 };
@@ -337,27 +345,27 @@ const Dashboard = () => {
 
   const features = [
     {
-      icon: Sparkles,
-      title: "AI-Powered Insights",
-      description: "Get personalized financial recommendations",
+      icon: Calculator,
+      title: "AI Profit Analysis",
+      description: "Real profit after all costs",
       color: "from-blue-500 to-blue-600",
     },
     {
       icon: Wallet,
-      title: "Dynamic Budgeting",
-      description: "Feast and famine week budgets",
+      title: "Cash Management",
+      description: "Daily opening/closing balance",
       color: "from-green-500 to-green-600",
     },
     {
       icon: AlertTriangle,
-      title: "Risk Analysis",
-      description: "Monitor your financial health",
+      title: "Credit Risk Alerts",
+      description: "Aging & collection tracking",
       color: "from-red-500 to-red-600",
     },
     {
       icon: Receipt,
-      title: "Tax Automation",
-      description: "Auto-calculate and file ITR",
+      title: "VAT Compliance",
+      description: "UAE 5% VAT auto-calculated",
       color: "from-purple-500 to-purple-600",
     },
   ];
@@ -370,19 +378,19 @@ const Dashboard = () => {
           Good {new Date().getHours() < 12 ? "Morning" : new Date().getHours() < 18 ? "Afternoon" : "Evening"}
           {user?.name?.split(" ")[0] && `, ${user.name.split(" ")[0]}`}
           </h1>
-        <p className="text-[15px] text-muted-foreground font-normal">Here's your financial overview</p>
+        <p className="text-[15px] text-muted-foreground font-normal">Here's your business overview</p>
       </div>
 
       <PageIntro
         title="What is this page?"
-        description="This is your daily money hub. Add today's income and expenses from here and see a quick overview of how you're doing."
+        description="Your daily business hub. Record sales and expenses, track cash flow, and see a quick overview of your store's performance."
       />
 
       {/* AI Analysis Status */}
       <AIAnalysisStatus />
 
-      {/* Instant Value Section - Shows immediately based on occupation */}
-      {user?.occupation && occupationInsights[user.occupation] && (
+      {/* Instant Value Section - Shows based on business type */}
+      {user?.business_type && businessInsights[user.business_type] && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Quick Tips Card */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-[8px] p-5">
@@ -390,10 +398,10 @@ const Dashboard = () => {
               <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
                 <Lightbulb className="w-4 h-4 text-white" />
               </div>
-              <h3 className="text-[15px] font-semibold text-blue-900">Tips for You</h3>
+              <h3 className="text-[15px] font-semibold text-blue-900">Business Tips</h3>
             </div>
             <ul className="space-y-3">
-              {occupationInsights[user.occupation].tips.map((tip, index) => (
+              {businessInsights[user.business_type].tips.map((tip, index) => (
                 <li key={index} className="flex items-start gap-2 text-[13px] text-blue-800">
                   <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
                   {tip}
@@ -402,31 +410,31 @@ const Dashboard = () => {
             </ul>
           </div>
 
-          {/* Government Schemes Card */}
+          {/* SME Programs Card */}
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-[8px] p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
                   <BadgeCheck className="w-4 h-4 text-white" />
                 </div>
-                <h3 className="text-[15px] font-semibold text-green-900">Schemes You May Qualify For</h3>
+                <h3 className="text-[15px] font-semibold text-green-900">Eligible Programs</h3>
               </div>
               <button
-                onClick={() => navigate("/benefits")}
+                onClick={() => navigate("/uae-programs")}
                 className="text-[12px] text-green-700 hover:text-green-900 flex items-center gap-1"
               >
                 View All <ArrowRight className="w-3 h-3" />
               </button>
             </div>
             <ul className="space-y-3">
-              {occupationInsights[user.occupation].schemes.map((scheme, index) => (
+              {businessInsights[user.business_type].programs.map((program, index) => (
                 <li key={index} className="flex items-start gap-3">
                   <span className="mt-0.5 w-5 h-5 rounded bg-green-100 text-green-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">
                     {index + 1}
                   </span>
                   <div>
-                    <p className="text-[13px] font-medium text-green-900">{scheme.name}</p>
-                    <p className="text-[12px] text-green-700">{scheme.benefit}</p>
+                    <p className="text-[13px] font-medium text-green-900">{program.name}</p>
+                    <p className="text-[12px] text-green-700">{program.benefit}</p>
                   </div>
                 </li>
               ))}
@@ -506,24 +514,52 @@ const Dashboard = () => {
         onSuccess={loadData}
       />
 
+      {/* UAE Business Tools - Quick Access */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-[20px] font-semibold tracking-tight text-foreground">Business Tools</h2>
+            <p className="text-[13px] text-muted-foreground">UAE shop owner essentials</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {uaeBusinessTools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <button
+                key={tool.path}
+                onClick={() => navigate(tool.path)}
+                className={`${tool.bgColor} border ${tool.borderColor} rounded-[8px] p-4 text-left transition-all hover:shadow-md hover:-translate-y-0.5`}
+              >
+                <div className={`w-10 h-10 rounded-[6px] bg-gradient-to-br ${tool.color} flex items-center justify-center mb-3`}>
+                  <Icon className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-[14px] font-semibold text-foreground">{tool.title}</h3>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{tool.description}</p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Summary Cards - Asymmetric grid, real shadows */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="bg-background border border-border/40 rounded-[6px] p-5 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:shadow-[0_2px_4px_0_rgba(0,0,0,0.08)] transition-shadow">
-          <p className="text-[13px] text-muted-foreground font-medium mb-1.5">Today's Income</p>
+          <p className="text-[13px] text-muted-foreground font-medium mb-1.5">Today's Sales</p>
           <p className="text-[28px] font-semibold tracking-tight text-[#16a34a]">
-            ₹{todaySummary.income.toLocaleString("en-IN")}
+            AED {todaySummary.income.toLocaleString("en-AE")}
           </p>
                 </div>
         <div className="bg-background border border-border/40 rounded-[6px] p-5 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:shadow-[0_2px_4px_0_rgba(0,0,0,0.08)] transition-shadow">
           <p className="text-[13px] text-muted-foreground font-medium mb-1.5">Today's Expenses</p>
           <p className="text-[28px] font-semibold tracking-tight text-[#dc2626]">
-            ₹{todaySummary.expense.toLocaleString("en-IN")}
+            AED {todaySummary.expense.toLocaleString("en-AE")}
           </p>
               </div>
         <div className="bg-background border border-border/40 rounded-[6px] p-5 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] hover:shadow-[0_2px_4px_0_rgba(0,0,0,0.08)] transition-shadow md:col-span-1">
-          <p className="text-[13px] text-muted-foreground font-medium mb-1.5">Current Balance</p>
+          <p className="text-[13px] text-muted-foreground font-medium mb-1.5">Cash Balance</p>
           <p className="text-[28px] font-semibold tracking-tight text-foreground">
-            ₹{balance.toLocaleString("en-IN")}
+            AED {balance.toLocaleString("en-AE")}
           </p>
                 </div>
         </div>
@@ -572,8 +608,8 @@ const Dashboard = () => {
                       : "text-[#dc2626]"
                   }`}
                 >
-                  {transaction.transaction_type === "income" ? "+" : "−"}₹
-                  {transaction.amount.toLocaleString("en-IN")}
+                  {transaction.transaction_type === "income" ? "+" : "−"}AED 
+                  {transaction.amount.toLocaleString("en-AE")}
                 </div>
                     </div>
                 ))}
@@ -584,9 +620,9 @@ const Dashboard = () => {
       {/* Feature Section - Asymmetric layout */}
                       <div>
         <div className="mb-4">
-          <h2 className="text-[20px] font-semibold tracking-tight text-foreground mb-1.5">What is Agente AI?</h2>
+          <h2 className="text-[20px] font-semibold tracking-tight text-foreground mb-1.5">What is StoreBuddy?</h2>
           <p className="text-[14px] text-muted-foreground leading-relaxed">
-            Your personal finance coach for the gig economy. Smart insights, better savings, brighter future.
+            Your AI-powered retail companion. Track sales, manage credit, stay VAT compliant, and grow your business smarter.
           </p>
                       </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -712,8 +748,8 @@ const Dashboard = () => {
                             : "text-red-600"
                         }`}
                       >
-                        {transaction.type === "income" ? "+" : "-"}₹
-                        {transaction.amount.toLocaleString("en-IN")}
+                        {transaction.type === "income" ? "+" : "-"}AED 
+                        {transaction.amount.toLocaleString("en-AE")}
                       </div>
                     </div>
                   ))}

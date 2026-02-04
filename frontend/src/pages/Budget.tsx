@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -368,19 +368,19 @@ const Budget = () => {
             <Card className="p-6">
               <p className="text-sm text-muted-foreground mb-2">Expected Income</p>
               <p className="text-2xl font-bold text-green-600">
-                ₹{Number(activeBudget.total_income_expected || 0).toLocaleString("en-IN")}
+                AED {Number(activeBudget.total_income_expected || 0).toLocaleString("en-AE")}
               </p>
             </Card>
             <Card className="p-6">
               <p className="text-sm text-muted-foreground mb-2">Total Expenses</p>
               <p className="text-2xl font-bold text-red-600">
-                ₹{totalExpenses.toLocaleString("en-IN")}
+                AED {totalExpenses.toLocaleString("en-AE")}
               </p>
             </Card>
             <Card className="p-6">
               <p className="text-sm text-muted-foreground mb-2">Savings Target</p>
               <p className="text-2xl font-bold">
-                ₹{Number(activeBudget.savings_target || 0).toLocaleString("en-IN")}
+                AED {Number(activeBudget.savings_target || 0).toLocaleString("en-AE")}
               </p>
             </Card>
             <Card className="p-6">
@@ -389,7 +389,7 @@ const Budget = () => {
                 <HelpTooltip text="Money left after fixed bills and basics. This is the flexible amount you can choose how to use." />
               </div>
               <p className="text-2xl font-bold">
-                ₹{Number(activeBudget.discretionary_budget || 0).toLocaleString("en-IN")}
+                AED {Number(activeBudget.discretionary_budget || 0).toLocaleString("en-AE")}
               </p>
             </Card>
           </div>
@@ -406,7 +406,7 @@ const Budget = () => {
                   <div>
                     <p className="font-medium">{name}</p>
                   </div>
-                  <p className="font-semibold">₹{Number(amount).toLocaleString("en-IN")}</p>
+                  <p className="font-semibold">AED {Number(amount).toLocaleString("en-AE")}</p>
                 </div>
               ))}
               {Object.keys(fixedCosts).length === 0 && (
@@ -432,7 +432,7 @@ const Budget = () => {
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{category}</span>
                       <span className={`text-sm ${isOverBudget ? "text-red-600 font-semibold" : "text-muted-foreground"}`}>
-                        ₹{actual.toLocaleString("en-IN")} / ₹{amountNum.toLocaleString("en-IN")}
+                        AED {actual.toLocaleString("en-AE")} / AED {amountNum.toLocaleString("en-AE")}
                         {isOverBudget && " (Over budget!)"}
                       </span>
             </div>
@@ -466,7 +466,7 @@ const Budget = () => {
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{category}</span>
                       <span className={`text-sm ${isOverBudget ? "text-red-600 font-semibold" : "text-muted-foreground"}`}>
-                        ₹{actual.toLocaleString("en-IN")} / ₹{limitNum.toLocaleString("en-IN")}
+                        AED {actual.toLocaleString("en-AE")} / AED {limitNum.toLocaleString("en-AE")}
                         {isOverBudget && " (Over limit!)"}
                 </span>
               </div>
@@ -521,7 +521,7 @@ const Budget = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Expected Income (₹) *</Label>
+                <Label>Expected Income (AED ) *</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -552,7 +552,7 @@ const Budget = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Savings Target (₹)</Label>
+                <Label>Savings Target (AED )</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -562,7 +562,7 @@ const Budget = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-1.5">
-                  <Label>Discretionary Budget (₹)</Label>
+                  <Label>Discretionary Budget (AED )</Label>
                   <HelpTooltip text="Money left after fixed bills and basics. This is the flexible amount you can choose how to use." />
                 </div>
                 <Input

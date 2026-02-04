@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Target, Plus, Home, ChevronDown, ChevronUp, CheckCircle, Clock, AlertCircle, PiggyBank, IndianRupee } from "lucide-react";
+import { Loader2, Target, Plus, Home, ChevronDown, ChevronUp, CheckCircle, Clock, AlertCircle, PiggyBank, DollarSign } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import db from "@/services/database";
 import { toast } from "sonner";
@@ -133,7 +133,7 @@ const Goals = () => {
         status: newStatus,
       });
 
-      toast.success(`Added ₹${amount.toLocaleString("en-IN")} to ${selectedGoal.goal_name}!`);
+      toast.success(`Added AED ${amount.toLocaleString("en-AE")} to ${selectedGoal.goal_name}!`);
 
       if (newProgress >= 100) {
         toast.success("Congratulations! You've completed this goal!", { duration: 5000 });
@@ -246,13 +246,13 @@ const Goals = () => {
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
           <div className="text-sm text-muted-foreground">Total Target</div>
           <div className="text-2xl font-bold text-blue-600">
-            ₹{goals.reduce((sum, g) => sum + (g.target_amount || 0), 0).toLocaleString("en-IN")}
+            AED {goals.reduce((sum, g) => sum + (g.target_amount || 0), 0).toLocaleString("en-AE")}
           </div>
         </Card>
         <Card className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20">
           <div className="text-sm text-muted-foreground">Total Saved</div>
           <div className="text-2xl font-bold text-purple-600">
-            ₹{goals.reduce((sum, g) => sum + (g.current_amount || 0), 0).toLocaleString("en-IN")}
+            AED {goals.reduce((sum, g) => sum + (g.current_amount || 0), 0).toLocaleString("en-AE")}
           </div>
         </Card>
       </div>
@@ -294,10 +294,10 @@ const Goals = () => {
                         <p className="text-sm text-muted-foreground mb-2">{goal.description}</p>
                         <div className="flex items-center gap-4 text-sm">
                           <span>
-                            Target: <strong>₹{(goal.target_amount || 0).toLocaleString("en-IN")}</strong>
+                            Target: <strong>AED {(goal.target_amount || 0).toLocaleString("en-AE")}</strong>
                           </span>
                           <span>
-                            Saved: <strong className="text-green-600">₹{(goal.current_amount || 0).toLocaleString("en-IN")}</strong>
+                            Saved: <strong className="text-green-600">AED {(goal.current_amount || 0).toLocaleString("en-AE")}</strong>
                           </span>
                           {goal.target_date && (
                             <span>
@@ -406,7 +406,7 @@ const Goals = () => {
                                     <div>
                                       <div className="font-medium">{milestone.milestone_name}</div>
                                       <div className="text-sm text-muted-foreground">
-                                        ₹{(milestone.target_amount || 0).toLocaleString("en-IN")}
+                                        AED {(milestone.target_amount || 0).toLocaleString("en-AE")}
                                         {milestone.target_date && ` by ${format(new Date(milestone.target_date), "MMM yyyy")}`}
                                       </div>
                                     </div>
@@ -445,7 +445,7 @@ const Goals = () => {
                             <div className="flex items-center justify-between">
                               <div>
                                 <div className="text-sm text-muted-foreground">Monthly Target</div>
-                                <div className="text-xl font-bold">₹{goal.monthly_target.toLocaleString("en-IN")}</div>
+                                <div className="text-xl font-bold">AED {goal.monthly_target.toLocaleString("en-AE")}</div>
                               </div>
                               <Button size="sm" onClick={(e) => { e.stopPropagation(); openContributeDialog(goal); }}>
                                 <PiggyBank className="w-4 h-4 mr-2" />
@@ -502,7 +502,7 @@ const Goals = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Target Amount (₹) *</Label>
+                <Label>Target Amount (AED ) *</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -530,7 +530,7 @@ const Goals = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Monthly Savings Target (₹)</Label>
+                <Label>Monthly Savings Target (AED )</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -578,11 +578,11 @@ const Goals = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-muted-foreground">Current</p>
-                    <p className="font-semibold text-green-600">₹{(selectedGoal.current_amount || 0).toLocaleString("en-IN")}</p>
+                    <p className="font-semibold text-green-600">AED {(selectedGoal.current_amount || 0).toLocaleString("en-AE")}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Target</p>
-                    <p className="font-semibold">₹{(selectedGoal.target_amount || 0).toLocaleString("en-IN")}</p>
+                    <p className="font-semibold">AED {(selectedGoal.target_amount || 0).toLocaleString("en-AE")}</p>
                   </div>
                 </div>
                 <Progress value={selectedGoal.progress_percentage || 0} className="mt-3" />
@@ -593,9 +593,9 @@ const Goals = () => {
 
               {/* Amount Input */}
               <div className="space-y-2">
-                <Label>Amount to Add (₹)</Label>
+                <Label>Amount to Add (AED)</Label>
                 <div className="relative">
-                  <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     type="number"
                     placeholder="Enter amount"
@@ -607,7 +607,7 @@ const Goals = () => {
                 </div>
                 {contributionAmount && parseFloat(contributionAmount) > 0 && (
                   <p className="text-sm text-green-600">
-                    New balance: ₹{((selectedGoal.current_amount || 0) + parseFloat(contributionAmount)).toLocaleString("en-IN")}
+                    New balance: AED {((selectedGoal.current_amount || 0) + parseFloat(contributionAmount)).toLocaleString("en-AE")}
                     {" "}({Math.min(100, Math.round(((selectedGoal.current_amount || 0) + parseFloat(contributionAmount)) / selectedGoal.target_amount * 100))}%)
                   </p>
                 )}
@@ -624,7 +624,7 @@ const Goals = () => {
                       size="sm"
                       onClick={() => setContributionAmount(String(amount))}
                     >
-                      ₹{amount.toLocaleString("en-IN")}
+                      AED {amount.toLocaleString("en-AE")}
                     </Button>
                   ))}
                 </div>
@@ -649,7 +649,7 @@ const Goals = () => {
                   disabled={!contributionAmount || parseFloat(contributionAmount) <= 0}
                 >
                   <PiggyBank className="w-4 h-4 mr-2" />
-                  Add ₹{contributionAmount ? parseFloat(contributionAmount).toLocaleString("en-IN") : "0"}
+                  Add AED {contributionAmount ? parseFloat(contributionAmount).toLocaleString("en-AE") : "0"}
                 </Button>
               </div>
             </div>

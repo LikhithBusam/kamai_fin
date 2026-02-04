@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+﻿import { useState, useMemo, useEffect } from "react";
 import { useApp } from "@/contexts/AppContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -276,12 +276,12 @@ const Transactions = () => {
         <h2 className="text-xl font-bold mb-4">Today's Summary</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-muted-foreground">Income</p>
-            <p className="text-2xl font-bold text-green-600">₹{todayIncome.toLocaleString("en-IN")}</p>
+            <p className="text-sm text-muted-foreground">Sales</p>
+            <p className="text-2xl font-bold text-green-600">AED {todayIncome.toLocaleString("en-AE")}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Expense</p>
-            <p className="text-2xl font-bold text-red-600">₹{todayExpense.toLocaleString("en-IN")}</p>
+            <p className="text-sm text-muted-foreground">Expenses</p>
+            <p className="text-2xl font-bold text-red-600">AED {todayExpense.toLocaleString("en-AE")}</p>
           </div>
         </div>
       </Card>
@@ -406,7 +406,7 @@ const TransactionRow = ({
                             : "text-red-600 dark:text-red-400"
                         )}
                       >
-                        {transaction.transaction_type === "income" ? "+" : "-"}₹{Number(transaction.amount).toLocaleString("en-IN")}
+                        {transaction.transaction_type === "income" ? "+" : "-"}AED {Number(transaction.amount).toLocaleString("en-AE")}
                       </div>
                       <Button variant="ghost" size="icon" onClick={() => onEdit(transaction)}>
                         <Edit className="w-4 h-4" />
@@ -510,7 +510,7 @@ const EditTransactionDialog = ({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Amount (₹) *</Label>
+              <Label>Amount (AED) *</Label>
               <Input
                 type="number"
                 step="0.01"

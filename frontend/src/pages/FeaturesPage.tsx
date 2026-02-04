@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -32,10 +32,10 @@ const FeaturesPage = () => {
             </Button>
             <div>
               <h1 className="text-4xl font-bold text-foreground">
-                KAMAI Features
+                StoreBuddy Features
               </h1>
               <p className="text-muted-foreground mt-2">
-                Explore our comprehensive financial management capabilities
+                Explore our comprehensive business management capabilities
               </p>
             </div>
           </div>
@@ -112,9 +112,9 @@ const FeaturesPage = () => {
 
         {/* CTA Section */}
         <div className="mt-16 text-center bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-12">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Finances?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Grow Your Business?</h2>
           <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of gig workers who are already using KAMAI to optimize their financial journey.
+            Join thousands of UAE shop owners who are already using StoreBuddy to manage their retail business.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

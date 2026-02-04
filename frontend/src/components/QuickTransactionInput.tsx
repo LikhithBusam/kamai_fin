@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Quick Transaction Input
  * WhatsApp-style fast input for transactions
  * Just type "500 swiggy" or "earned 1000 uber" and it auto-parses
@@ -101,7 +101,7 @@ const parseQuickInput = (input: string): ParsedInput | null => {
   // Generate description from remaining text
   const description = trimmed
     .replace(amountMatch[0], '')
-    .replace(/[₹$]/g, '')
+    .replace(/[AED $]/g, '')
     .replace(/\b(rs|rupees?|inr)\b/gi, '')
     .trim()
     .replace(/\s+/g, ' ')
@@ -111,7 +111,7 @@ const parseQuickInput = (input: string): ParsedInput | null => {
     amount,
     type,
     category,
-    description: description || `${type === 'income' ? 'Earned' : 'Spent'} ₹${amount}`,
+    description: description || `${type === 'income' ? 'Earned' : 'Spent'} AED ${amount}`,
     confidence,
   };
 };
@@ -153,7 +153,7 @@ export const QuickTransactionInput = ({ onSuccess, placeholder }: QuickTransacti
 
       toast({
         title: `${preview.type === 'income' ? 'Income' : 'Expense'} Added`,
-        description: `₹${preview.amount.toLocaleString('en-IN')} - ${preview.category}`,
+        description: `AED ${preview.amount.toLocaleString('en-AE')} - ${preview.category}`,
       });
 
       setInput('');
@@ -190,7 +190,7 @@ export const QuickTransactionInput = ({ onSuccess, placeholder }: QuickTransacti
     const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     const recognition = new SpeechRecognition();
 
-    recognition.lang = 'en-IN';
+    recognition.lang = 'en-AE';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
@@ -281,7 +281,7 @@ export const QuickTransactionInput = ({ onSuccess, placeholder }: QuickTransacti
             ) : (
               <Minus className="w-3 h-3" />
             )}
-            <span className="font-medium">₹{preview.amount.toLocaleString('en-IN')}</span>
+            <span className="font-medium">AED {preview.amount.toLocaleString('en-AE')}</span>
             <span className="text-muted-foreground">•</span>
             <span>{preview.category}</span>
           </div>

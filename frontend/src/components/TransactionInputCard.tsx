@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ const TransactionInputCard = ({ onSuccess }: TransactionInputCardProps) => {
     amount: "",
     transaction_type: "expense" as "income" | "expense",
     transaction_date: new Date(),
-    transaction_time: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
+    transaction_time: new Date().toLocaleTimeString("en-AE", { hour: "2-digit", minute: "2-digit" }),
     category: "",
     subcategory: "",
     payment_method: "",
@@ -90,7 +90,7 @@ const TransactionInputCard = ({ onSuccess }: TransactionInputCardProps) => {
         amount: "",
         transaction_type: "expense",
         transaction_date: new Date(),
-        transaction_time: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
+        transaction_time: new Date().toLocaleTimeString("en-AE", { hour: "2-digit", minute: "2-digit" }),
         category: "",
         subcategory: "",
         payment_method: "",
@@ -299,7 +299,7 @@ const TransactionInputCard = ({ onSuccess }: TransactionInputCardProps) => {
             {/* Amount & Type */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Amount (₹) *</Label>
+                <Label>Amount (AED) *</Label>
                 <Input
                   type="number"
                   step="0.01"

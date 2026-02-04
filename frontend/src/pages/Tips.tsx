@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -334,7 +334,7 @@ const Tips = () => {
                   {selectedRec.target_amount && (
                     <div>
                       <p className="text-sm text-muted-foreground">Target Amount</p>
-                      <p className="font-semibold">₹{selectedRec.target_amount.toLocaleString("en-IN")}</p>
+                      <p className="font-semibold">AED {selectedRec.target_amount.toLocaleString("en-AE")}</p>
                     </div>
                   )}
                   {selectedRec.confidence_score && (

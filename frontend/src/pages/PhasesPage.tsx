@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -62,7 +62,7 @@ const PhasesPage = () => {
                 System Architecture
               </h1>
               <p className="text-muted-foreground mt-2">
-                Discover how KAMAI's AI-powered system works behind the scenes
+                Discover how StoreBuddy's AI-powered system works behind the scenes
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Database Service Layer
  * Direct Supabase database access - fetches data directly from database
  */
@@ -6,7 +6,7 @@
 import { supabase } from "@/lib/supabase";
 
 // ============================================================================
-// TYPES (Matching Database Schema)
+// TYPES (Matching UAE Database Schema)
 // ============================================================================
 
 export interface User {
@@ -14,16 +14,43 @@ export interface User {
   phone_number: string;
   email?: string;
   full_name: string;
-  occupation?: string;
-  city?: string;
-  state?: string;
-  pin_code?: string;
-  date_of_birth?: string;
-  preferred_language: string;
-  is_active: boolean;
-  kyc_verified: boolean;
-  onboarding_completed: boolean;
+  full_name_arabic?: string;
+  nationality?: string;
+  is_emirati?: boolean;
+  emirate?: string;
+  preferred_language?: string;
+  is_active?: boolean;
+  kyc_verified?: boolean;
+  onboarding_completed?: boolean;
+  business_type?: string;
+  business_name?: string;
+  trn?: string;
   created_at: string;
+}
+
+export interface BusinessProfile {
+  id: string;
+  user_id: string;
+  business_name: string;
+  business_name_arabic?: string;
+  trade_license_number?: string;
+  trade_license_expiry?: string;
+  trn?: string;
+  emirate?: string;
+  area?: string;
+  business_type: string;
+  license_type?: string;
+  free_zone_name?: string;
+  owner_nationality?: string;
+  owner_is_emirati?: boolean;
+  employee_count?: number;
+  annual_turnover_range?: string;
+  vat_registered?: boolean;
+  vat_filing_frequency?: string;
+  monthly_rent?: number;
+  current_balance?: number;
+  created_at: string;
+  updated_at?: string;
 }
 
 export interface UserProfile {
@@ -189,55 +216,86 @@ const getUserId = (): string | null => {
 // ============================================================================
 
 export const db = {
-  // ========== AUTHENTICATION ==========
+  // ========== AUTHENTICATION (Using Supabase Auth) ==========
   auth: {
-    login: async (phone_number: string, password: string) => {
+    login: async (email: string, password: string) => {
       try {
         // Simple validation
-        if (!phone_number || !password) {
-          throw new Error('Phone number and password are required');
+        if (!email || !password) {
+          throw new Error('Email and password are required');
         }
 
-        if (phone_number.length !== 10) {
-          throw new Error('Please enter a valid 10-digit phone number');
+        // Use Supabase Auth for login
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+
+        if (error) {
+          console.error('[AUTH] Login error:', error);
+          // Provide better error messages
+          if (error.message.includes('Invalid login credentials')) {
+            throw new Error('Invalid email or password. Please check your credentials and try again.');
+          }
+          if (error.message.includes('Email not confirmed')) {
+            throw new Error('Please check your email and click the confirmation link before logging in.');
+          }
+          throw new Error(error.message || 'Login failed');
         }
 
-        // Check if user exists in database and get their UUID
-        const { data: existingUser, error: userError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('phone_number', phone_number)
-          .single();
-
-        if (userError && userError.code !== 'PGRST116') {
-          console.error('[AUTH] Database error during login:', userError);
-          throw new Error('Database error occurred');
-        }
-
-        if (!existingUser) {
+        if (!data.user) {
           throw new Error('User not found. Please sign up first.');
         }
 
-        // Simple password validation (in real app, use proper hashing)
-        // For now, we'll just check if password matches a simple pattern
-        // In production, you should implement proper password hashing
-        const isValidPassword = password.length >= 6; // Simple validation
-        
-        if (!isValidPassword) {
-          throw new Error('Invalid password');
+        const userId = data.user.id;
+        localStorage.setItem('user_id', userId);
+        localStorage.setItem('auth_token', data.session?.access_token || `token_${userId}`);
+
+        // Check if user exists in users table, create if not
+        const { data: existingUser, error: fetchError } = await supabase
+          .from('users')
+          .select('user_id')
+          .eq('user_id', userId)
+          .single();
+
+        if (fetchError && fetchError.code === 'PGRST116') {
+          // User doesn't exist in users table, create profile
+          console.log('[AUTH] User profile not found, creating...');
+          const userMetadata = data.user.user_metadata || {};
+
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert({
+              user_id: userId,
+              email: data.user.email || email,
+              phone_number: userMetadata.phone_number || '',
+              full_name: userMetadata.full_name || data.user.email?.split('@')[0] || 'User',
+              nationality: userMetadata.nationality || '',
+              is_emirati: userMetadata.is_emirati || false,
+              emirate: userMetadata.emirate || '',
+              business_name: userMetadata.business_name || '',
+              business_type: userMetadata.business_type || 'general',
+              trn: userMetadata.trn || '',
+              preferred_language: userMetadata.preferred_language || 'en',
+              is_active: true,
+              kyc_verified: false,
+              onboarding_completed: false,
+              created_at: new Date().toISOString(),
+            });
+
+          if (insertError) {
+            console.error('[AUTH] Failed to create user profile on login:', insertError);
+          } else {
+            console.log('[AUTH] User profile created on login');
+          }
         }
 
-        // Use the actual UUID from the database
-        const userId = existingUser.user_id;
-        localStorage.setItem('user_id', userId);
-        localStorage.setItem('auth_token', `token_${userId}_${Date.now()}`);
-        
         console.log('[AUTH] Login successful for user:', userId);
-        
+
         return {
-          user: existingUser,
+          user: data.user,
           user_id: userId,
-          access_token: `token_${userId}_${Date.now()}`
+          access_token: data.session?.access_token
         };
       } catch (error) {
         console.error('[AUTH] Login error:', error);
@@ -250,88 +308,146 @@ export const db = {
       full_name: string;
       password: string;
       email?: string;
-      occupation?: string;
-      city?: string;
-      state?: string;
-      date_of_birth?: string;
+      // UAE-specific fields
+      nationality?: string;
+      is_emirati?: boolean;
+      emirate?: string;
+      business_name?: string;
+      business_type?: string;
+      trn?: string;
       preferred_language?: string;
-      income_range?: string;
     }) => {
       try {
         // Validate required fields
-        if (!userData.phone_number || !userData.full_name || !userData.password) {
-          throw new Error('Phone number, full name, and password are required');
+        if (!userData.full_name || !userData.password) {
+          throw new Error('Full name and password are required');
         }
 
-        if (userData.phone_number.length !== 10) {
-          throw new Error('Please enter a valid 10-digit phone number');
-        }
+        // Need email for Supabase auth
+        const email = userData.email || `${userData.phone_number.replace(/\D/g, '')}@storebuddy.app`;
 
         if (userData.password.length < 6) {
           throw new Error('Password must be at least 6 characters');
         }
 
-        // Check if user already exists
-        const { data: existingUser, error: checkError } = await supabase
-          .from('users')
-          .select('user_id')
-          .eq('phone_number', userData.phone_number)
-          .single();
-
-        if (existingUser) {
-          throw new Error('User with this phone number already exists. Please login instead.');
-        }
-
-        // Generate a proper UUID for user_id
-        const userId = crypto.randomUUID();
-
-        // Create new user in database
-        const newUser = {
-          user_id: userId,
-          phone_number: userData.phone_number,
-          full_name: userData.full_name,
-          email: userData.email || '',
-          occupation: userData.occupation || '',
-          city: userData.city || '',
-          state: userData.state || '',
-          date_of_birth: userData.date_of_birth || null,
-          preferred_language: userData.preferred_language || 'en',
-          income_range: userData.income_range || '',
-          is_active: true,
-          kyc_verified: false,
-          onboarding_completed: false,
-          created_at: new Date().toISOString()
-        };
-
-        const { data: createdUser, error: insertError } = await supabase
-          .from('users')
-          .insert([newUser])
-          .select()
-          .single();
-
-        if (insertError) {
-          console.error('[AUTH] Error creating user:', insertError);
-          
-          // More detailed error message
-          if (insertError.code === '23505') {
-            throw new Error('User with this phone number already exists. Please login instead.');
-          } else if (insertError.code === '23502') {
-            throw new Error('Missing required information. Please fill all required fields.');
-          } else {
-            throw new Error(`Failed to create user account: ${insertError.message || 'Unknown database error'}`);
+        // Use Supabase Auth for signup
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: userData.password,
+          options: {
+            emailRedirectTo: window.location.origin + '/auth',
+            data: {
+              full_name: userData.full_name,
+              phone_number: userData.phone_number,
+              nationality: userData.nationality || '',
+              is_emirati: userData.is_emirati || false,
+              emirate: userData.emirate || '',
+              business_name: userData.business_name || '',
+              business_type: userData.business_type || 'general',
+              trn: userData.trn || '',
+              preferred_language: userData.preferred_language || 'en',
+            }
           }
+        });
+
+        if (error) {
+          console.error('[AUTH] Signup error:', error);
+          if (error.message.includes('already registered') || error.message.includes('User already registered')) {
+            throw new Error('This email is already registered. Please login instead.');
+          }
+          if (error.message.includes('rate limit') || error.message.includes('too many')) {
+            throw new Error('Too many signup attempts. Please wait a few minutes and try again.');
+          }
+          throw new Error(`Failed to create account: ${error.message}`);
         }
+
+        // Check if user was created but needs email confirmation
+        // Supabase returns user data but no session when email confirmation is required
+        if (data.user && !data.session) {
+          console.log('[AUTH] Email confirmation required for:', email);
+          // Still create the user profile in the database
+          const userId = data.user.id;
+          
+          // Insert user into users table
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert({
+              user_id: userId,
+              email: email,
+              phone_number: userData.phone_number || '',
+              full_name: userData.full_name,
+              nationality: userData.nationality || '',
+              is_emirati: userData.is_emirati || false,
+              emirate: userData.emirate || '',
+              business_name: userData.business_name || '',
+              business_type: userData.business_type || 'general',
+              trn: userData.trn || '',
+              preferred_language: userData.preferred_language || 'en',
+              is_active: true,
+              kyc_verified: false,
+              onboarding_completed: false,
+              created_at: new Date().toISOString(),
+            });
+
+          if (insertError) {
+            console.error('[AUTH] Failed to create user profile:', insertError);
+          }
+
+          // Return success but indicate email confirmation needed
+          return {
+            user: data.user,
+            user_id: userId,
+            needsEmailConfirmation: true,
+            message: 'Account created! Please check your email to confirm your account before logging in.'
+          };
+        }
+
+        if (!data.user) {
+          throw new Error('Failed to create user account');
+        }
+
+        const userId = data.user.id;
 
         // Set authentication tokens
         localStorage.setItem('user_id', userId);
-        localStorage.setItem('auth_token', `token_${userId}_${Date.now()}`);
-        
+        localStorage.setItem('auth_token', data.session?.access_token || `token_${userId}_${Date.now()}`);
+
+        // IMPORTANT: Insert user into the users table
+        // This is needed because Supabase Auth and the users table are separate
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert({
+            user_id: userId,
+            email: email,
+            phone_number: userData.phone_number || '',
+            full_name: userData.full_name,
+            nationality: userData.nationality || '',
+            is_emirati: userData.is_emirati || false,
+            emirate: userData.emirate || '',
+            business_name: userData.business_name || '',
+            business_type: userData.business_type || 'general',
+            trn: userData.trn || '',
+            preferred_language: userData.preferred_language || 'en',
+            is_active: true,
+            kyc_verified: false,
+            onboarding_completed: false,
+            created_at: new Date().toISOString(),
+          });
+
+        if (insertError) {
+          console.error('[AUTH] Failed to create user profile:', insertError);
+          // Don't throw - auth succeeded, profile creation is secondary
+          // The user can still use the app with auth only
+        } else {
+          console.log('[AUTH] User profile created successfully');
+        }
+
         console.log('[AUTH] Signup successful for user:', userId);
-        
+
         return {
-          user: createdUser,
+          user: data.user,
           user_id: userId,
-          access_token: `token_${userId}_${Date.now()}`
+          access_token: data.session?.access_token
         };
       } catch (error) {
         console.error('[AUTH] Signup error:', error);
@@ -339,9 +455,15 @@ export const db = {
       }
     },
 
-    logout: () => {
+    logout: async () => {
+      await supabase.auth.signOut();
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_id');
+    },
+
+    getCurrentUser: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      return user;
     },
   },
 
@@ -1018,7 +1140,7 @@ export const db = {
           'small business': ['pmegp', 'mudra', 'loan', 'enterprise', 'pension', 'health', 'insurance'],
         };
 
-        // Common schemes for all gig workers
+        // Common schemes for all business owners
         const commonSchemes = ['pm-sym', 'ayushman', 'pension', 'health', 'jan dhan', 'atal pension', 'pmjjby', 'pmsby'];
 
         // Get keywords for user's occupation

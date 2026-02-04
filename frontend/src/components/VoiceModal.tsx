@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -194,7 +194,7 @@ const VoiceModal = ({ open, onClose, onConfirm }: VoiceModalProps) => {
                 {extractedData.amount && (
                   <div className="flex items-center gap-1">
                     <CheckCircle className="w-3 h-3 text-green-600" />
-                    Amount: ₹{extractedData.amount}
+                    Amount: AED {extractedData.amount}
                   </div>
                 )}
                 {extractedData.type && (

@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js' 
+﻿import { createClient } from '@supabase/supabase-js' 
  
 // Use environment variables - NEVER commit actual keys!
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''

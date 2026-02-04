@@ -1,7 +1,8 @@
 {
-  "name": "kamai-financial-companion",
+  "name": "storebuddy-uae",
   "private": true,
   "version": "1.0.0",
+  "description": "StoreBuddy UAE - AI-Powered Financial Companion for Retail and Distribution Businesses",
   "type": "module",
   "scripts": {
     "dev": "vite",

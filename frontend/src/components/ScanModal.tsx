@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -249,7 +249,7 @@ const ScanModal = ({ open, onClose, onConfirm }: ScanModalProps) => {
                 {extractedData.amount && (
                   <div className="flex items-center gap-1">
                     <CheckCircle className="w-3 h-3 text-green-600" />
-                    Amount: ₹{extractedData.amount}
+                    Amount: AED {extractedData.amount}
                   </div>
                 )}
                 {extractedData.merchant && (
@@ -423,7 +423,7 @@ export default ScanModal;
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Amount:</span>
-                    <span className="font-semibold text-expense">₹850</span>
+                    <span className="font-semibold text-expense">AED 850</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Category:</span>

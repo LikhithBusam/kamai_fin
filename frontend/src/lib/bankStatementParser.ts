@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bank Statement PDF Parser
  * Parses PDF bank statements from major Indian banks and extracts transactions
  */
@@ -153,7 +153,7 @@ function parseAmount(amountStr: string): number | null {
   if (!amountStr) return null;
 
   // Remove currency symbols and spaces
-  let cleaned = amountStr.replace(/[₹Rs\.INR\s]/gi, '').trim();
+  let cleaned = amountStr.replace(/[AED Rs\.INR\s]/gi, '').trim();
 
   // Handle Indian number format (1,00,000.00)
   cleaned = cleaned.replace(/,/g, '');

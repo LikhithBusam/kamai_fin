@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -134,7 +134,7 @@ const Savings = () => {
 
       <PageIntro
         title="What is this page?"
-        description="This page shows your savings goals and investment recommendations. Our AI analyzes your income patterns to suggest the best savings strategies for gig workers."
+        description="This page shows your savings goals and investment recommendations. Our AI analyzes your revenue patterns to suggest the best savings strategies for UAE shop owners."
       />
 
       {/* Summary Cards */}
@@ -145,7 +145,7 @@ const Savings = () => {
             <span className="text-sm text-muted-foreground">Total Saved</span>
           </div>
           <div className="text-2xl font-bold text-green-600">
-            ₹{totalSaved.toLocaleString("en-IN")}
+            AED {totalSaved.toLocaleString("en-AE")}
           </div>
         </Card>
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
@@ -154,7 +154,7 @@ const Savings = () => {
             <span className="text-sm text-muted-foreground">Target</span>
           </div>
           <div className="text-2xl font-bold text-blue-600">
-            ₹{totalSavingsTarget.toLocaleString("en-IN")}
+            AED {totalSavingsTarget.toLocaleString("en-AE")}
           </div>
         </Card>
         <Card className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20">
@@ -163,7 +163,7 @@ const Savings = () => {
             <span className="text-sm text-muted-foreground">Monthly Savings</span>
           </div>
           <div className="text-2xl font-bold text-purple-600">
-            ₹{totalMonthlyContribution.toLocaleString("en-IN")}
+            AED {totalMonthlyContribution.toLocaleString("en-AE")}
           </div>
         </Card>
         <Card className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20">
@@ -172,7 +172,7 @@ const Savings = () => {
             <span className="text-sm text-muted-foreground">Invest Monthly</span>
           </div>
           <div className="text-2xl font-bold text-orange-600">
-            ₹{totalInvestmentRecommended.toLocaleString("en-IN")}
+            AED {totalInvestmentRecommended.toLocaleString("en-AE")}
           </div>
         </Card>
       </div>
@@ -243,19 +243,19 @@ const Savings = () => {
                     <div>
                       <div className="text-muted-foreground">Current</div>
                       <div className="font-semibold text-green-600">
-                        ₹{(goal.current_amount || 0).toLocaleString("en-IN")}
+                        AED {(goal.current_amount || 0).toLocaleString("en-AE")}
                       </div>
                     </div>
                     <div>
                       <div className="text-muted-foreground">Target</div>
                       <div className="font-semibold">
-                        ₹{(goal.target_amount || 0).toLocaleString("en-IN")}
+                        AED {(goal.target_amount || 0).toLocaleString("en-AE")}
                       </div>
                     </div>
                     <div>
                       <div className="text-muted-foreground">Monthly</div>
                       <div className="font-semibold text-blue-600">
-                        ₹{(goal.monthly_contribution || 0).toLocaleString("en-IN")}
+                        AED {(goal.monthly_contribution || 0).toLocaleString("en-AE")}
                       </div>
                     </div>
                   </div>
@@ -299,7 +299,7 @@ const Savings = () => {
                       <div className="flex items-center justify-between">
                         <span className="text-muted-foreground">Recommended Amount</span>
                         <span className="font-semibold text-primary">
-                          ₹{(investment.recommended_amount || 0).toLocaleString("en-IN")}/{investment.frequency}
+                          AED {(investment.recommended_amount || 0).toLocaleString("en-AE")}/{investment.frequency}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -328,7 +328,7 @@ const Savings = () => {
           {/* Investment Tips */}
           <Card className="p-6 bg-gradient-to-r from-primary/10 to-secondary/10">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              💡 Investment Tips for Gig Workers
+              💡 Investment Tips for UAE Business Owners
             </h3>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">

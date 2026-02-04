@@ -1,7 +1,7 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Brain, Menu, X } from 'lucide-react';
+import { Store, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 export const Header: React.FC = () => {
@@ -32,10 +32,10 @@ export const Header: React.FC = () => {
             onClick={() => navigate('/')}
             className="flex items-center gap-2 font-bold text-slate-900 hover:text-slate-700 transition-colors"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-slate-900 to-slate-700 flex items-center justify-center">
-              <Brain className="text-white" size={18} />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 flex items-center justify-center">
+              <Store className="text-white" size={18} />
             </div>
-            <span className="text-lg">KAMAI</span>
+            <span className="text-lg">StoreBuddy</span>
           </button>
 
           {/* Desktop Navigation */}

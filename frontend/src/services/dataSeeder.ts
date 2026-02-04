@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Data Seeder Service
  * Automatically populates sample data for new users or users without data
  * Called after successful login
@@ -136,7 +136,7 @@ const seedRiskAssessment = async (userId: string) => {
     emergency_fund_coverage: 2.5,
     escalation_needed: false,
     recommended_actions: [
-      { action: 'Build emergency fund to 6 months', description: 'Target: Save ₹50,000 over next 6 months' },
+      { action: 'Build emergency fund to 6 months', description: 'Target: Save AED 50,000 over next 6 months' },
       { action: 'Reduce discretionary spending', description: 'Cut non-essential expenses by 20%' },
       { action: 'Diversify income sources', description: 'Consider additional gig platforms' },
     ],
@@ -163,7 +163,7 @@ const seedExecutedActions = async (userId: string) => {
     {
       user_id: userId,
       action_type: 'savings',
-      action_description: 'Auto-save ₹500 to emergency fund',
+      action_description: 'Auto-save AED 500 to emergency fund',
       status: 'active',
       amount: 500.00,
       schedule: 'daily',
@@ -175,7 +175,7 @@ const seedExecutedActions = async (userId: string) => {
     {
       user_id: userId,
       action_type: 'debt',
-      action_description: 'Pay ₹2000 towards credit card debt',
+      action_description: 'Pay AED 2000 towards credit card debt',
       status: 'pending',
       amount: 2000.00,
       schedule: 'weekly',
@@ -186,7 +186,7 @@ const seedExecutedActions = async (userId: string) => {
     {
       user_id: userId,
       action_type: 'savings',
-      action_description: 'Transfer ₹1000 to savings account',
+      action_description: 'Transfer AED 1000 to savings account',
       status: 'pending',
       amount: 1000.00,
       schedule: 'weekly',
@@ -198,7 +198,7 @@ const seedExecutedActions = async (userId: string) => {
     {
       user_id: userId,
       action_type: 'savings',
-      action_description: 'Monthly SIP of ₹3000',
+      action_description: 'Monthly SIP of AED 3000',
       status: 'active',
       amount: 3000.00,
       schedule: 'monthly',
@@ -210,7 +210,7 @@ const seedExecutedActions = async (userId: string) => {
     {
       user_id: userId,
       action_type: 'budget',
-      action_description: 'Limit food delivery to ₹2000/month',
+      action_description: 'Limit food delivery to AED 2000/month',
       status: 'active',
       amount: 2000.00,
       schedule: 'monthly',
@@ -233,7 +233,7 @@ const seedExecutedActions = async (userId: string) => {
     {
       user_id: userId,
       action_type: 'savings',
-      action_description: 'Emergency fund contribution of ₹5000',
+      action_description: 'Emergency fund contribution of AED 5000',
       status: 'completed',
       amount: 5000.00,
       execution_date: new Date(today.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(),
@@ -260,7 +260,7 @@ const seedRecommendations = async (userId: string) => {
       recommendation_type: 'savings',
       priority: 'high',
       title: 'Build Emergency Fund',
-      description: 'Aim to save 6 months of expenses (₹50,000) for financial security',
+      description: 'Aim to save 6 months of expenses (AED 50,000) for financial security',
       reasoning: 'Your current emergency fund covers only 2.5 months. Building it to 6 months will provide better protection during income fluctuations.',
       target_amount: 50000,
       target_date: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -272,8 +272,8 @@ const seedRecommendations = async (userId: string) => {
       recommendation_type: 'budget',
       priority: 'medium',
       title: 'Reduce Food Delivery Expenses',
-      description: 'Limit food delivery to ₹2000/month to save more',
-      reasoning: 'Food delivery expenses are high. Cooking at home can save ₹3000-5000 monthly.',
+      description: 'Limit food delivery to AED 2000/month to save more',
+      reasoning: 'Food delivery expenses are high. Cooking at home can save AED 3000-5000 monthly.',
       confidence_score: 0.75,
       status: 'pending',
     },

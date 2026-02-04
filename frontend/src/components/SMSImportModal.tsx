@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -209,7 +209,7 @@ export const SMSImportModal = ({ open, onOpenChange, onSuccess }: SMSImportModal
                           transaction.type === "income" ? "text-green-600" : "text-red-600"
                         }`}
                       >
-                        {transaction.type === "income" ? "+" : "-"}₹{transaction.amount.toLocaleString("en-IN")}
+                        {transaction.type === "income" ? "+" : "-"}AED {transaction.amount.toLocaleString("en-AE")}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 bg-muted rounded">
                         {transaction.bankName}
@@ -217,7 +217,7 @@ export const SMSImportModal = ({ open, onOpenChange, onSuccess }: SMSImportModal
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5 truncate">
                       {transaction.merchant || categorizeTransaction(transaction)}
-                      {transaction.balance && ` • Bal: ₹${transaction.balance.toLocaleString("en-IN")}`}
+                      {transaction.balance && ` • Bal: AED ${transaction.balance.toLocaleString("en-AE")}`}
                     </div>
                   </div>
                 </div>

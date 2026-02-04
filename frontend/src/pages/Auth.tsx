@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useApp } from "@/contexts/AppContext";
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2, Brain, TrendingUp, Shield, Zap } from "lucide-react";
+import { ArrowRight, Loader2, Store, TrendingUp, Shield, Receipt } from "lucide-react";
 import { toast } from "sonner";
+
+// UAE Emirates
+const EMIRATES = [
+  { value: 'dubai', label: 'Dubai' },
+  { value: 'abu_dhabi', label: 'Abu Dhabi' },
+  { value: 'sharjah', label: 'Sharjah' },
+  { value: 'ajman', label: 'Ajman' },
+  { value: 'rak', label: 'Ras Al Khaimah' },
+  { value: 'fujairah', label: 'Fujairah' },
+  { value: 'uaq', label: 'Umm Al Quwain' },
+];
+
+// Business Types
+const BUSINESS_TYPES = [
+  { value: 'grocery', label: 'Grocery / Baqala' },
+  { value: 'electronics', label: 'Electronics' },
+  { value: 'pharmacy', label: 'Pharmacy' },
+  { value: 'cafeteria', label: 'Cafeteria / Restaurant' },
+  { value: 'textile', label: 'Textile / Garments' },
+  { value: 'auto_parts', label: 'Auto Parts' },
+  { value: 'general', label: 'General Trading' },
+];
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -22,7 +44,7 @@ const Auth = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const [loginData, setLoginData] = useState({
-    phone_number: "",
+    email: "",
     password: "",
   });
 
@@ -33,24 +55,29 @@ const Auth = () => {
     password: "",
     confirm_password: "",
     preferred_language: "en",
-    occupation: "",
-    income_range: "",
-    city: "",
+    business_name: "",
+    business_type: "",
+    emirate: "",
   });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!loginData.phone_number || !loginData.password) {
+    if (!loginData.email || !loginData.password) {
       toast.error("Please fill all fields");
       return;
     }
     try {
       setIsLoading(true);
-      await login(loginData.phone_number, loginData.password);
+      await login(loginData.email, loginData.password);
       toast.success("Login successful!");
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Login failed";
-      toast.error(errorMsg);
+      // Check for email confirmation issue
+      if (errorMsg.includes('confirm') || errorMsg.includes('Email not confirmed')) {
+        toast.info("Please check your email and click the confirmation link first.", { duration: 8000 });
+      } else {
+        toast.error(errorMsg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +85,7 @@ const Auth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!signupData.full_name || !signupData.phone_number || !signupData.password || !signupData.occupation || !signupData.income_range || !signupData.city) {
+    if (!signupData.full_name || !signupData.email || !signupData.password || !signupData.business_name || !signupData.emirate) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -74,27 +101,34 @@ const Auth = () => {
       setIsLoading(true);
       await signup({
         full_name: signupData.full_name,
-        phone_number: signupData.phone_number,
-        email: signupData.email || undefined,
+        phone_number: signupData.phone_number || "",
+        email: signupData.email,
         password: signupData.password,
-        occupation: signupData.occupation,
-        city: signupData.city,
-        income_range: signupData.income_range,
+        business_name: signupData.business_name,
+        business_type: signupData.business_type || "general",
+        emirate: signupData.emirate,
       });
       toast.success("Account created successfully!");
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Signup failed";
-      toast.error(errorMsg);
+      // Show email confirmation message as info, not error
+      if (errorMsg.includes('check your email') || errorMsg.includes('confirm')) {
+        toast.info(errorMsg, { duration: 8000 });
+        // Switch to login tab after showing the message
+        setActiveTab("login");
+      } else {
+        toast.error(errorMsg);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const features = [
-    { icon: Brain, text: "AI-Powered Financial Analysis" },
-    { icon: TrendingUp, text: "Income Forecasting" },
-    { icon: Shield, text: "Offline-First Privacy" },
-    { icon: Zap, text: "Real-time Automation" },
+    { icon: Store, text: "Smart Inventory & Sales" },
+    { icon: TrendingUp, text: "Revenue Analytics" },
+    { icon: Shield, text: "UAE VAT Compliance" },
+    { icon: Receipt, text: "Expense Tracking" },
   ];
 
   return (
@@ -107,11 +141,11 @@ const Auth = () => {
           className="hidden md:block space-y-6"
         >
           <div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-600 bg-clip-text text-transparent mb-4">
-              KAMAI
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent mb-4">
+              StoreBuddy
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Your smart financial companion for daily earnings. AI-powered insights for India's gig economy.
+              Your smart retail companion for UAE shop owners. AI-powered insights for small business success.
             </p>
           </div>
 
@@ -148,23 +182,22 @@ const Auth = () => {
               <TabsContent value="login" className="space-y-4">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Welcome back!</h2>
-                  <p className="text-muted-foreground">Login to your KAMAI account</p>
+                  <p className="text-muted-foreground">Login to your StoreBuddy account</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-phone">Phone Number</Label>
+                    <Label htmlFor="login-email">Email</Label>
                     <Input
-                      id="login-phone"
-                      type="tel"
-                      placeholder="9876543210"
-                      maxLength={10}
-                      value={loginData.phone_number}
+                      id="login-email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={loginData.email}
                       onChange={(e) =>
-                        setLoginData({ ...loginData, phone_number: e.target.value.replace(/\D/g, "").slice(0, 10) })
+                        setLoginData({ ...loginData, email: e.target.value })
                       }
                       disabled={isLoading}
-                      autoComplete="tel"
+                      autoComplete="email"
                     />
                   </div>
 
@@ -216,7 +249,7 @@ const Auth = () => {
               <TabsContent value="signup" className="space-y-4">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Create your account</h2>
-                  <p className="text-muted-foreground">Start your financial journey with KAMAI</p>
+                  <p className="text-muted-foreground">Start growing your business with StoreBuddy</p>
                 </div>
 
                 <form onSubmit={handleSignup} className="space-y-4">
@@ -225,7 +258,7 @@ const Auth = () => {
                     <Input
                       id="signup-name"
                       type="text"
-                      placeholder="Rajesh Kumar"
+                      placeholder="Ahmed Khan"
                       value={signupData.full_name}
                       onChange={(e) => setSignupData({ ...signupData, full_name: e.target.value })}
                       disabled={isLoading}
@@ -234,23 +267,7 @@ const Auth = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-phone">Phone Number *</Label>
-                    <Input
-                      id="signup-phone"
-                      type="tel"
-                      placeholder="9876543210"
-                      maxLength={10}
-                      value={signupData.phone_number}
-                      onChange={(e) =>
-                        setSignupData({ ...signupData, phone_number: e.target.value.replace(/\D/g, "").slice(0, 10) })
-                      }
-                      disabled={isLoading}
-                      autoComplete="tel"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email (Optional)</Label>
+                    <Label htmlFor="signup-email">Email *</Label>
                     <Input
                       id="signup-email"
                       type="email"
@@ -263,56 +280,62 @@ const Auth = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-occupation">What type of work do you do? *</Label>
-                    <Select
-                      value={signupData.occupation}
-                      onValueChange={(v) => setSignupData({ ...signupData, occupation: v })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your work type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="delivery_partner">Delivery Partner (Swiggy, Zomato, etc.)</SelectItem>
-                        <SelectItem value="cab_driver">Cab/Auto Driver (Uber, Ola, Rapido)</SelectItem>
-                        <SelectItem value="freelancer">Freelancer (Writing, Design, Tech)</SelectItem>
-                        <SelectItem value="street_vendor">Street Vendor / Hawker</SelectItem>
-                        <SelectItem value="home_service">Home Service (Plumber, Electrician, etc.)</SelectItem>
-                        <SelectItem value="beauty_wellness">Beauty & Wellness Professional</SelectItem>
-                        <SelectItem value="tutor">Private Tutor / Coach</SelectItem>
-                        <SelectItem value="other">Other Gig Work</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-income">Monthly Income Range *</Label>
-                    <Select
-                      value={signupData.income_range}
-                      onValueChange={(v) => setSignupData({ ...signupData, income_range: v })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select income range" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="below_10k">Below ₹10,000</SelectItem>
-                        <SelectItem value="10k_20k">₹10,000 - ₹20,000</SelectItem>
-                        <SelectItem value="20k_40k">₹20,000 - ₹40,000</SelectItem>
-                        <SelectItem value="40k_60k">₹40,000 - ₹60,000</SelectItem>
-                        <SelectItem value="above_60k">Above ₹60,000</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-city">City *</Label>
+                    <Label htmlFor="signup-phone">Phone Number (Optional)</Label>
                     <Input
-                      id="signup-city"
+                      id="signup-phone"
+                      type="tel"
+                      placeholder="+971 50 123 4567"
+                      value={signupData.phone_number}
+                      onChange={(e) => setSignupData({ ...signupData, phone_number: e.target.value })}
+                      disabled={isLoading}
+                      autoComplete="tel"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-business">Business Name *</Label>
+                    <Input
+                      id="signup-business"
                       type="text"
-                      placeholder="e.g., Mumbai, Delhi, Bangalore"
-                      value={signupData.city}
-                      onChange={(e) => setSignupData({ ...signupData, city: e.target.value })}
+                      placeholder="Al Baraka Grocery"
+                      value={signupData.business_name}
+                      onChange={(e) => setSignupData({ ...signupData, business_name: e.target.value })}
                       disabled={isLoading}
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-type">Business Type *</Label>
+                    <Select
+                      value={signupData.business_type}
+                      onValueChange={(v) => setSignupData({ ...signupData, business_type: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select business type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {BUSINESS_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-emirate">Emirate *</Label>
+                    <Select
+                      value={signupData.emirate}
+                      onValueChange={(v) => setSignupData({ ...signupData, emirate: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select emirate" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {EMIRATES.map((emirate) => (
+                          <SelectItem key={emirate.value} value={emirate.value}>{emirate.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
@@ -352,16 +375,14 @@ const Auth = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="hi">Hindi</SelectItem>
-                        <SelectItem value="ta">Tamil</SelectItem>
-                        <SelectItem value="te">Telugu</SelectItem>
-                        <SelectItem value="kn">Kannada</SelectItem>
-                        <SelectItem value="mr">Marathi</SelectItem>
+                        <SelectItem value="ar">العربية (Arabic)</SelectItem>
+                        <SelectItem value="hi">हिंदी (Hindi)</SelectItem>
+                        <SelectItem value="ur">اردو (Urdu)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />

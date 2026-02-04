@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Spare Backend Service
  * Connects to the AI agent analysis backend running on WSL
  */

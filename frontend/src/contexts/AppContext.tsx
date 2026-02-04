@@ -314,6 +314,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       // Use database service which properly sets user_id in localStorage
       const response = await db.auth.signup(data);
 
+      // Check if email confirmation is needed
+      if (response.needsEmailConfirmation) {
+        // Don't navigate to dashboard, show message to user
+        throw new Error(response.message || 'Please check your email to confirm your account before logging in.');
+      }
+
       const userId = response.user?.user_id || response.user_id || localStorage.getItem('user_id');
       if (userId && !localStorage.getItem('user_id')) {
         localStorage.setItem('user_id', String(userId));

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * API Service Layer
  * Centralized API client for all backend communication
  * Handles authentication, error handling, and typed responses
@@ -33,6 +33,11 @@ export interface User {
   age?: number;
   monthly_income?: number;
   occupation?: string;
+  business_type?: string;
+  emirate?: string;
+  nationality?: string;
+  business_name?: string;
+  trn?: string;
   created_at: string;
   updated_at: string;
 }

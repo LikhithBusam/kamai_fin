@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -186,7 +186,7 @@ const Stats = () => {
 
       <PageIntro
         title="What is this page?"
-        description="Here you see patterns in your money: when you earn more, where you spend more, and how your money moves over time."
+        description="See patterns in your business: when you sell more, where you spend more, and how your cash flow moves over time."
       />
 
       {/* Filters */}
@@ -234,27 +234,27 @@ const Stats = () => {
         {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-6">
-          <p className="text-sm text-muted-foreground mb-2">Total Income</p>
+          <p className="text-sm text-muted-foreground mb-2">Total Sales</p>
           <p className="text-3xl font-bold text-green-600">
-            ₹{stats.total_income.toLocaleString("en-IN")}
+            AED {stats.total_income.toLocaleString("en-AE")}
           </p>
             </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-2">Total Expenses</p>
           <p className="text-3xl font-bold text-red-600">
-            ₹{stats.total_expense.toLocaleString("en-IN")}
+            AED {stats.total_expense.toLocaleString("en-AE")}
           </p>
             </Card>
             <Card className="p-6">
-          <p className="text-sm text-muted-foreground mb-2">Net Savings</p>
+          <p className="text-sm text-muted-foreground mb-2">Net Profit</p>
           <p className="text-3xl font-bold">
-            ₹{stats.net_savings.toLocaleString("en-IN")}
+            AED {stats.net_savings.toLocaleString("en-AE")}
           </p>
             </Card>
             <Card className="p-6">
-          <p className="text-sm text-muted-foreground mb-2">Current Balance</p>
+          <p className="text-sm text-muted-foreground mb-2">Cash Balance</p>
           <p className="text-3xl font-bold">
-            ₹{(stats.total_income - stats.total_expense).toLocaleString("en-IN")}
+            AED {(stats.total_income - stats.total_expense).toLocaleString("en-AE")}
           </p>
             </Card>
       </div>
@@ -280,7 +280,7 @@ const Stats = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                <Tooltip formatter={(value: number) => `₹${value.toLocaleString("en-IN")}`} />
+                <Tooltip formatter={(value: number) => `AED ${value.toLocaleString("en-AE")}`} />
                 </PieChart>
               </ResponsiveContainer>
           ) : (
@@ -353,7 +353,7 @@ const Stats = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip formatter={(value: number) => `₹${value.toLocaleString("en-IN")}`} />
+                <Tooltip formatter={(value: number) => `AED ${value.toLocaleString("en-AE")}`} />
                 <Legend />
                 <Bar dataKey="income" fill="#10B981" name="Income" />
                 <Bar dataKey="expense" fill="#EF4444" name="Expense" />
@@ -377,7 +377,7 @@ const Stats = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip formatter={(value: number) => `₹${value.toLocaleString("en-IN")}`} />
+                <Tooltip formatter={(value: number) => `AED ${value.toLocaleString("en-AE")}`} />
                 <Line type="monotone" dataKey="amount" stroke="#3B82F6" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
@@ -395,7 +395,7 @@ const Stats = () => {
               <div className="flex justify-between mb-2">
                 <span className="text-sm text-muted-foreground">Current</span>
                 <span className="text-sm font-semibold">
-                  ₹{stats.emergency_fund.current.toLocaleString("en-IN")}
+                  AED {stats.emergency_fund.current.toLocaleString("en-AE")}
                 </span>
               </div>
               <div className="w-full bg-muted rounded-full h-4">
@@ -407,7 +407,7 @@ const Stats = () => {
               <div className="flex justify-between mt-2">
                 <span className="text-xs text-muted-foreground">Target</span>
                 <span className="text-xs font-semibold">
-                  ₹{stats.emergency_fund.target.toLocaleString("en-IN")}
+                  AED {stats.emergency_fund.target.toLocaleString("en-AE")}
                 </span>
               </div>
             </div>

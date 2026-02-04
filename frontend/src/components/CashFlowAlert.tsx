@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Cash Flow Alert Component
- * Shows real-time daily cash flow status - the #1 concern for gig workers
+ * Shows real-time daily cash flow status - the #1 concern for shop owners
  * "Am I on track to pay my bills this month?"
  */
 
@@ -107,13 +107,13 @@ export const CashFlowAlert = () => {
 
       if (projectedGap >= upcomingBills.total * 0.2) {
         cashFlowStatus = 'on_track';
-        message = `Looking good! You have ₹${Math.abs(projectedGap).toLocaleString('en-IN')} buffer after all bills.`;
+        message = `Looking good! You have AED ${Math.abs(projectedGap).toLocaleString('en-AE')} buffer after all bills.`;
       } else if (projectedGap >= 0) {
         cashFlowStatus = 'at_risk';
-        message = `Heads up: You're cutting it close. Earn ₹${dailyTarget.toLocaleString('en-IN')}/day to stay safe.`;
+        message = `Heads up: You're cutting it close. Earn AED ${dailyTarget.toLocaleString('en-AE')}/day to stay safe.`;
       } else {
         cashFlowStatus = 'critical';
-        message = `Alert: You're ₹${Math.abs(projectedGap).toLocaleString('en-IN')} short for upcoming bills. Consider extra work.`;
+        message = `Alert: You're AED ${Math.abs(projectedGap).toLocaleString('en-AE')} short for upcoming bills. Consider extra work.`;
       }
 
       setStatus({
@@ -244,19 +244,19 @@ export const CashFlowAlert = () => {
           <div className="bg-white/60 rounded-lg p-2.5 text-center">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Income</p>
             <p className="text-[14px] font-semibold text-green-600">
-              ₹{status.monthToDate.income.toLocaleString('en-IN')}
+              AED {status.monthToDate.income.toLocaleString('en-AE')}
             </p>
           </div>
           <div className="bg-white/60 rounded-lg p-2.5 text-center">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Expenses</p>
             <p className="text-[14px] font-semibold text-red-600">
-              ₹{status.monthToDate.expenses.toLocaleString('en-IN')}
+              AED {status.monthToDate.expenses.toLocaleString('en-AE')}
             </p>
           </div>
           <div className="bg-white/60 rounded-lg p-2.5 text-center">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Bills Due</p>
             <p className="text-[14px] font-semibold text-foreground">
-              ₹{status.upcomingBills.total.toLocaleString('en-IN')}
+              AED {status.upcomingBills.total.toLocaleString('en-AE')}
             </p>
           </div>
         </div>
@@ -269,7 +269,7 @@ export const CashFlowAlert = () => {
               <span className="text-[12px] text-muted-foreground">Daily earning target</span>
             </div>
             <span className="text-[14px] font-semibold text-foreground">
-              ₹{Math.ceil(status.dailyTarget).toLocaleString('en-IN')}/day
+              AED {Math.ceil(status.dailyTarget).toLocaleString('en-AE')}/day
             </span>
           </div>
         )}
@@ -277,8 +277,8 @@ export const CashFlowAlert = () => {
         {/* Next bill reminder */}
         {status.upcomingBills.nextDue && (
           <div className="flex items-center justify-between text-[12px] text-muted-foreground pt-2 border-t border-border/30">
-            <span>Next bill: {new Date(status.upcomingBills.nextDue).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
-            <span className="font-medium text-foreground">₹{status.upcomingBills.nextAmount?.toLocaleString('en-IN')}</span>
+            <span>Next bill: {new Date(status.upcomingBills.nextDue).toLocaleDateString('en-AE', { day: 'numeric', month: 'short' })}</span>
+            <span className="font-medium text-foreground">AED {status.upcomingBills.nextAmount?.toLocaleString('en-AE')}</span>
           </div>
         )}
       </CardContent>

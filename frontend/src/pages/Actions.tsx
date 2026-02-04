@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -334,7 +334,7 @@ const Actions = () => {
                           {getStatusBadge(action.status)}
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">
-                          Amount: ₹{Number(action.amount || 0).toLocaleString("en-IN")}
+                          Amount: AED {Number(action.amount || 0).toLocaleString("en-AE")}
                         </p>
                         {action.next_execution && (
                           <p className="text-sm text-muted-foreground">
@@ -396,7 +396,7 @@ const Actions = () => {
                         <Badge variant="outline">{action.schedule}</Badge>
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">
-                        Amount: ₹{Number(action.amount || 0).toLocaleString("en-IN")}
+                        Amount: AED {Number(action.amount || 0).toLocaleString("en-AE")}
                       </p>
                       {action.next_execution && (
                         <p className="text-sm text-muted-foreground">
@@ -440,7 +440,7 @@ const Actions = () => {
                         Completed on: {action.execution_date ? format(new Date(action.execution_date), "PPP") : "N/A"}
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Amount: ₹{Number(action.amount || 0).toLocaleString("en-IN")}
+                        Amount: AED {Number(action.amount || 0).toLocaleString("en-AE")}
                       </p>
                     </div>
                     </div>
@@ -500,7 +500,7 @@ const Actions = () => {
                           )}
                         </div>
                         <p className="text-sm text-muted-foreground mb-1">
-                          Amount: <span className="font-semibold text-foreground">₹{Number(bill.amount || 0).toLocaleString("en-IN")}</span>
+                          Amount: <span className="font-semibold text-foreground">AED {Number(bill.amount || 0).toLocaleString("en-AE")}</span>
                         </p>
                         <p className="text-sm text-muted-foreground">
                           Due: {format(dueDate, "PPP")} • {bill.frequency}

@@ -1,4 +1,4 @@
-// Flowchart Data for KAMAI Financial Companion
+// Flowchart Data for StoreBuddy Retail Companion
 export interface FlowchartData {
   title: string;
   description: string;
@@ -102,28 +102,28 @@ export const flowchartData: Record<string, FlowchartData> = {
     icon: "Zap",
     color: "from-emerald-600 to-emerald-700",
     code: `graph LR
-    User["👤 Gig Worker"]
+    User["🏪 Shop Owner"]
     
-    User --> Income["💰 Income Tracking<br/>• Daily earnings<br/>• Multi-platform sync<br/>• Pattern recognition"]
+    User --> Sales["💰 Sales Tracking<br/>• Daily revenue<br/>• Multi-channel sync<br/>• Pattern recognition"]
     
-    User --> Budget["📊 Smart Budgeting<br/>• Feast/famine cycles<br/>• Weather predictions<br/>• Cultural events"]
+    User --> Inventory["📊 Smart Inventory<br/>• Stock alerts<br/>• Reorder points<br/>• Seasonal demand"]
     
-    User --> Schemes["🏆 Government Schemes<br/>• 200+ opportunities<br/>• Auto-matching<br/>• Application assistance"]
+    User --> Programs["🏆 UAE SME Programs<br/>• MOHRE support<br/>• SME funding<br/>• Emiratisation"]
     
-    User --> Tax["📄 Tax Management<br/>• Automated compliance<br/>• Deduction optimization<br/>• Real-time filing"]
+    User --> VAT["📄 VAT Management<br/>• 5% compliance<br/>• Deduction tracking<br/>• FTA reporting"]
     
-    Income --> Analysis["🔍 AI Analysis"]
-    Budget --> Analysis
-    Schemes --> Analysis
-    Tax --> Analysis
+    Sales --> Analysis["🔍 AI Analysis"]
+    Inventory --> Analysis
+    Programs --> Analysis
+    VAT --> Analysis
     
-    Analysis --> Insights["💡 Smart Insights<br/>• Personalized advice<br/>• Proactive alerts<br/>• Growth opportunities"]
+    Analysis --> Insights["💡 Smart Insights<br/>• Business advice<br/>• Proactive alerts<br/>• Growth opportunities"]
     
     style User fill:#f3f4f6,stroke:#374151,stroke-width:3px
-    style Income fill:#059669,stroke:#047857,stroke-width:2px,color:#fff
-    style Budget fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
-    style Schemes fill:#7c3aed,stroke:#6b21a8,stroke-width:2px,color:#fff
-    style Tax fill:#dc2626,stroke:#b91c1c,stroke-width:2px,color:#fff
+    style Sales fill:#059669,stroke:#047857,stroke-width:2px,color:#fff
+    style Inventory fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
+    style Programs fill:#7c3aed,stroke:#6b21a8,stroke-width:2px,color:#fff
+    style VAT fill:#dc2626,stroke:#b91c1c,stroke-width:2px,color:#fff
     style Analysis fill:#374151,stroke:#1f2937,stroke-width:3px,color:#fff
     style Insights fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#fff`
   }

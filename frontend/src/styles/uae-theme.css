@@ -1,0 +1,226 @@
+/* StoreBuddy UAE - Design System */
+
+:root {
+  /* Brand Colors */
+  --sb-primary: #0D9488;
+  --sb-primary-dark: #0F766E;
+  --sb-primary-light: #14B8A6;
+  --sb-primary-50: #F0FDFA;
+  --sb-primary-100: #CCFBF1;
+  
+  /* Accent Colors */
+  --sb-gold: #F59E0B;
+  --sb-gold-light: #FCD34D;
+  --sb-red: #EF4444;
+  --sb-green: #22C55E;
+  --sb-blue: #3B82F6;
+  --sb-purple: #8B5CF6;
+  --sb-orange: #F97316;
+  
+  /* Neutrals */
+  --sb-gray-50: #F9FAFB;
+  --sb-gray-100: #F3F4F6;
+  --sb-gray-200: #E5E7EB;
+  --sb-gray-300: #D1D5DB;
+  --sb-gray-400: #9CA3AF;
+  --sb-gray-500: #6B7280;
+  --sb-gray-600: #4B5563;
+  --sb-gray-700: #374151;
+  --sb-gray-800: #1F2937;
+  --sb-gray-900: #111827;
+  
+  /* Shadows */
+  --sb-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sb-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --sb-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sb-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sb-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Radius */
+  --sb-radius-sm: 0.375rem;
+  --sb-radius: 0.5rem;
+  --sb-radius-md: 0.75rem;
+  --sb-radius-lg: 1rem;
+  --sb-radius-xl: 1.5rem;
+  --sb-radius-full: 9999px;
+  
+  /* Spacing */
+  --sb-space-1: 0.25rem;
+  --sb-space-2: 0.5rem;
+  --sb-space-3: 0.75rem;
+  --sb-space-4: 1rem;
+  --sb-space-5: 1.25rem;
+  --sb-space-6: 1.5rem;
+  --sb-space-8: 2rem;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Fonts */
+.font-arabic {
+  font-family: 'Cairo', 'Noto Sans Arabic', sans-serif;
+}
+
+.font-hindi {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sb-gray-100);
+  border-radius: var(--sb-radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sb-gray-300);
+  border-radius: var(--sb-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-gray-400);
+}
+
+/* Safe Area for Mobile */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--sb-gray-200) 25%, var(--sb-gray-100) 50%, var(--sb-gray-200) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--sb-radius);
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--sb-primary) 0%, var(--sb-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card Hover Effect */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sb-shadow-lg);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--sb-primary) 0%, var(--sb-primary-dark) 100%);
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--sb-radius-lg);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.4);
+}
+
+.btn-secondary {
+  background: var(--sb-gray-100);
+  color: var(--sb-gray-700);
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--sb-radius-lg);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--sb-gray-200);
+}
+
+/* Input Styles */
+.input-field {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid var(--sb-gray-200);
+  border-radius: var(--sb-radius-lg);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--sb-primary);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+/* Progress Circle */
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.5s ease;
+}
